@@ -1,4 +1,4 @@
-module github.com/cfabrica46/social-network-mongodb
+module github.com/cfabrica46/social-network-mongodb/server
 
 go 1.16
 
