@@ -20,8 +20,8 @@ func main() {
 	rGetUserFromBody := r.Group("/")
 	rGetUserFromBody.Use(middleware.GetUserFromBody())
 	{
-		rGetUserFromBody.POST("/login", handler.Login)
-		rGetUserFromBody.POST("/register", handler.Register)
+		rGetUserFromBody.POST("/signin", handler.SignIn)
+		rGetUserFromBody.POST("/signup", handler.SignUp)
 	}
 
 	rGetUserFromToken := r.Group("/")
