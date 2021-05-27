@@ -43,14 +43,13 @@ func GetUserFromToken() gin.HandlerFunc {
 			return
 		}
 
-		//	check := database.CheckIfTokenIsInBlackList(Token.Authorization)
-
-		//if !check {
-		//	c.JSON(500, gin.H{
-		//		"ErrMessage": "El Token no es válido",
-		//	})
-		//	return
-		//}
+		check := database.CheckIfTokenIsInBlackList(Token.Authorization)
+		if !check {
+			c.JSON(500, gin.H{
+				"ErrMessage": "El Token no es válido",
+			})
+			return
+		}
 
 		user, err := token.ExtractUserFromClaims(Token.Authorization)
 

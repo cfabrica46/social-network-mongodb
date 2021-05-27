@@ -9,14 +9,25 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var client *mongo.Client
+var (
+	Client                                                *mongo.Client
+	DB                                                    *mongo.Database
+	UsersCollection, PostsCollection, BlackListCollection *mongo.Collection
+)
 
 func init() {
 	var err error
-	client, err = open()
+	Client, err = open()
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	DB = Client.Database("social_network")
+
+	UsersCollection = DB.Collection("users")
+	PostsCollection = DB.Collection("posts")
+	BlackListCollection = DB.Collection("black_list")
+
 }
 
 func open() (client *mongo.Client, err error) {

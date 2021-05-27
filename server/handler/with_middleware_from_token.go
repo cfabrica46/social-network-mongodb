@@ -14,16 +14,16 @@ func Profile(c *gin.Context) {
 
 func LogOut(c *gin.Context) {
 
-	//user := c.MustGet("user-data").(database.User)
-	//
-	//err := database.InsertIntoBlackList(user.Token)
-	//
-	//if err != nil {
-	//	c.JSON(500, gin.H{
-	//		"ErrMessage": "Internal Error",
-	//	})
-	//	return
-	//}
+	user := c.MustGet("user-data").(database.User)
+
+	err := database.InsertIntoBlackList(user.Token)
+
+	if err != nil {
+		c.JSON(500, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
 
 	c.JSON(200, gin.H{
 		"Message": "Sesión Cerrada",
@@ -32,16 +32,16 @@ func LogOut(c *gin.Context) {
 
 func DeleteUser(c *gin.Context) {
 
-	//user := c.MustGet("user-data").(database.User)
-	//
-	//err := database.DeleteUser(user.ID)
-	//
-	//if err != nil {
-	//	c.JSON(500, gin.H{
-	//		"ErrMessage": "Internal Error",
-	//	})
-	//	return
-	//}
+	user := c.MustGet("user-data").(database.User)
+
+	err := database.DeleteUser(user.ID.Hex())
+
+	if err != nil {
+		c.JSON(500, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
 
 	c.JSON(200, gin.H{
 		"Message": "Tu cuenta ah sido eliminada",
