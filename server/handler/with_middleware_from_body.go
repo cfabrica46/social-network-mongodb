@@ -1,0 +1,69 @@
+package handler
+
+import (
+	"github.com/cfabrica46/social-network-mongodb/server/database"
+	"github.com/cfabrica46/social-network-mongodb/server/token"
+	"github.com/gin-gonic/gin"
+)
+
+func Login(c *gin.Context) {
+
+	user := c.MustGet("user-data").(database.User)
+
+	//err := database.GetUser(&user)
+	//
+	//if err != nil {
+	//	c.JSON(403, gin.H{
+	//		"ErrMessage": "Usuario no encontrado",
+	//	})
+	//	return
+	//}
+	var err error
+	user.Token, err = token.GenerateToken(user.ID.Hex(), user.Username, user.Role)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"Token": user.Token,
+	})
+
+}
+
+func Register(c *gin.Context) {
+
+	user := c.MustGet("user-data").(database.User)
+
+	//	err := database.AddUser(user)
+	//	if err != nil {
+	//		c.JSON(403, gin.H{
+	//			"ErrMessage": "El nombre del usuario ya esta en uso",
+	//		})
+	//		return
+	//	}
+	//
+	//	err = database.GetUser(&user)
+	//	if err != nil {
+	//		c.JSON(403, gin.H{
+	//			"ErrMessage": "El nombre del usuario ya esta en uso",
+	//		})
+	//		return
+	//	}
+	var err error
+
+	user.Token, err = token.GenerateToken(user.ID.Hex(), user.Username, user.Role)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"Token": user.Token,
+	})
+
+}
