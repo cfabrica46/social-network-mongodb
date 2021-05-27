@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+
+	"github.com/cfabrica46/social-network-mongodb/client/request"
 )
 
 func main() {
@@ -46,15 +48,15 @@ func main() {
 			fmt.Printf("Password: ")
 			fmt.Scan(&password)
 
-			//			token, err := requests.Login(username, password, "http://localhost:8080/login")
-			//
-			//			if err != nil {
-			//				log.Fatal(err)
-			//			}
-			//
-			//			if token == "" {
-			//				break
-			//			}
+			token, err := request.Login(username, password, "http://localhost:8080/login")
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			if token == "" {
+				break
+			}
 			//
 			//			err = requests.Profile(token)
 			//
@@ -80,16 +82,16 @@ func main() {
 			fmt.Printf("Password: ")
 			fmt.Scan(&password)
 
-			//			token, err := requests.Login(username, password, "http://localhost:8080/register")
-			//
-			//			if err != nil {
-			//				log.Fatal(err)
-			//			}
-			//
-			//			if token == "" {
-			//				break
-			//			}
-			//
+			token, err := request.Login(username, password, "http://localhost:8080/register")
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			if token == "" {
+				break
+			}
+
 			//			err = requests.Profile(token)
 			//
 			//			if err != nil {
