@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/cfabrica46/social-network-mongodb/server/database"
@@ -14,6 +15,9 @@ func main() {
 	log.SetFlags(log.Lshortfile)
 
 	go database.CleanBlackList()
+
+	defer database.UsersCollection.Drop(context.TODO())
+	defer database.PostsCollection.Drop(context.TODO())
 
 	r := gin.Default()
 

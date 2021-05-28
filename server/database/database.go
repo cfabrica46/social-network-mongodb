@@ -81,3 +81,51 @@ func CleanBlackList() {
 	}
 
 }
+
+func GetUsers() (users []User, err error) {
+
+	cur, err := UsersCollection.Find(context.TODO(), bson.D{{}})
+	if err != nil {
+		return
+	}
+
+	for cur.Next(context.TODO()) {
+		var userAux User
+		err = cur.Decode(&userAux)
+		if err != nil {
+			return
+		}
+		users = append(users, userAux)
+	}
+	//var usersLoaded []bson.M
+	//lookupStage := bson.D{{"$lookup", bson.D{{"from", "posts"}, {"localField", "_id"}, {"foreignField", "userID"}, {"as", "user_posts"}}}}
+	//
+	//usersLoadedCursor, err := UsersCollection.Aggregate(context.TODO(), mongo.Pipeline{lookupStage})
+	//if err != nil {
+	//	return
+	//}
+	//
+	//if usersLoadedCursor.All(context.TODO(), &usersLoaded); err != nil {
+	//	return
+	//}
+	//
+	//for _, v := range usersLoaded {
+	//	var userAux User
+	//	var userPost []byte
+	//
+	//	userPost, err = bson.Marshal(v)
+	//	if err != nil {
+	//		return
+	//	}
+	//
+	//	err = bson.Unmarshal(userPost, &userAux)
+	//	if err != nil {
+	//		return
+	//	}
+	//
+	//	users = append(users, userAux)
+	//}
+
+	return
+
+}
