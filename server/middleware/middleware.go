@@ -32,18 +32,16 @@ func GetUserFromBody() gin.HandlerFunc {
 func GetUserFromToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		Token := struct {
-			Authorization string `header:"Authorization-header"`
-		}{}
+		var tokenValue database.Token
 
-		if err := c.ShouldBindHeader(&Token); err != nil {
+		if err := c.ShouldBindHeader(&tokenValue); err != nil {
 			c.JSON(500, gin.H{
 				"ErrMessage": "Internal Error",
 			})
 			return
 		}
 
-		check := database.CheckIfTokenIsInBlackList(Token.Authorization)
+		check := database.CheckIfTokenIsInBlackList(tokenValue.Content)
 		if check {
 			c.JSON(500, gin.H{
 				"ErrMessage": "El Token no es válido",
@@ -51,7 +49,7 @@ func GetUserFromToken() gin.HandlerFunc {
 			return
 		}
 
-		user, err := token.ExtractUserFromClaims(Token.Authorization)
+		user, err := token.ExtractUserFromClaims(tokenValue.Content)
 
 		if err != nil {
 			c.JSON(500, gin.H{
@@ -60,7 +58,7 @@ func GetUserFromToken() gin.HandlerFunc {
 			return
 		}
 
-		user.Token = Token.Authorization
+		user.Token = tokenValue.Content
 
 		deadline, err := time.Parse(time.ANSIC, user.Deadline)
 

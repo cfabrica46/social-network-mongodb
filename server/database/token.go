@@ -35,11 +35,9 @@ func InsertTokenIntoBlackList(token string) (err error) {
 
 func CleanBlackList() {
 
-	for {
-		err := BlackListCollection.Drop(context.TODO())
-		if err != nil {
-			log.Fatal(err)
-		}
+	err := BlackListCollection.Drop(context.TODO())
+	if err != nil {
+		log.Fatal(err)
 	}
 
 }

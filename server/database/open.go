@@ -19,7 +19,7 @@ type User struct {
 	Role     string             `bson:"role"`
 	Deadline string             `bson:"deadline"`
 	Token    string             `bson:"token"`
-	Posts    []Post             `bson:"user_posts",omitempty`
+	Posts    []Post             `bson:"user_posts,omitempty"`
 }
 
 type Post struct {

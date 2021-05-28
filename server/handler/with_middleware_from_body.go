@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/cfabrica46/social-network-mongodb/server/database"
 	"github.com/cfabrica46/social-network-mongodb/server/token"
 	"github.com/gin-gonic/gin"
@@ -13,7 +15,7 @@ func SignIn(c *gin.Context) {
 	err := database.GetUser(&user)
 
 	if err != nil {
-		c.JSON(403, gin.H{
+		c.JSON(http.StatusForbidden, gin.H{
 			"ErrMessage": "Usuario no encontrado",
 		})
 		return
@@ -21,7 +23,7 @@ func SignIn(c *gin.Context) {
 
 	user.Token, err = token.GenerateToken(user.ID.Hex(), user.Username, user.Role)
 	if err != nil {
-		c.JSON(500, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
 		})
 		return
@@ -29,7 +31,7 @@ func SignIn(c *gin.Context) {
 
 	token := database.Token{Content: user.Token}
 
-	c.JSON(200, token)
+	c.JSON(http.StatusOK, token)
 
 }
 
@@ -39,7 +41,7 @@ func SignUp(c *gin.Context) {
 
 	err := database.AddUser(user)
 	if err != nil {
-		c.JSON(403, gin.H{
+		c.JSON(http.StatusForbidden, gin.H{
 			"ErrMessage": "El nombre del usuario ya esta en uso",
 		})
 		return
@@ -47,7 +49,7 @@ func SignUp(c *gin.Context) {
 
 	err = database.GetUser(&user)
 	if err != nil {
-		c.JSON(403, gin.H{
+		c.JSON(http.StatusForbidden, gin.H{
 			"ErrMessage": "El nombre del usuario ya esta en uso",
 		})
 		return
@@ -55,7 +57,7 @@ func SignUp(c *gin.Context) {
 
 	user.Token, err = token.GenerateToken(user.ID.Hex(), user.Username, user.Role)
 	if err != nil {
-		c.JSON(500, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
 		})
 		return
@@ -63,6 +65,6 @@ func SignUp(c *gin.Context) {
 
 	token := database.Token{Content: user.Token}
 
-	c.JSON(200, token)
+	c.JSON(http.StatusOK, token)
 
 }

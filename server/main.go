@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/cfabrica46/social-network-mongodb/server/database"
 	"github.com/cfabrica46/social-network-mongodb/server/handler"
@@ -27,9 +28,15 @@ func main() {
 			os.Exit(0)
 		}()
 	}
+
 	log.SetFlags(log.Lshortfile)
 
-	go database.CleanBlackList()
+	go func() {
+		for {
+			database.CleanBlackList()
+			time.Sleep(time.Hour)
+		}
+	}()
 
 	r := gin.Default()
 
