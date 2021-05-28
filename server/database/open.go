@@ -117,23 +117,7 @@ func migrate() (err error) {
 		}
 	}
 
-	posts := []interface{}{
-		Post{
-			UserID:  ids[0],
-			Content: "Hola",
-			Date:    time.Now().String(),
-		},
-		Post{
-			UserID:  ids[0],
-			Content: "Adios",
-			Date:    time.Now().String(),
-		},
-		Post{
-			UserID:  ids[1],
-			Content: "Hola que tal",
-			Date:    time.Now().String(),
-		},
-	}
+	posts := []interface{}{}
 
 	for i := range ids {
 

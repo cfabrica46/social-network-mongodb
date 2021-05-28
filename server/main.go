@@ -3,6 +3,9 @@ package main
 import (
 	"context"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/cfabrica46/social-network-mongodb/server/database"
 	"github.com/cfabrica46/social-network-mongodb/server/handler"
@@ -11,13 +14,19 @@ import (
 )
 
 func main() {
+	sigs := make(chan os.Signal)
+	signal.Notify(sigs, syscall.SIGINT)
+
+	go func() {
+		<-sigs
+		database.UsersCollection.Drop(context.TODO())
+		database.PostsCollection.Drop(context.TODO())
+		os.Exit(0)
+	}()
 
 	log.SetFlags(log.Lshortfile)
 
 	go database.CleanBlackList()
-
-	defer database.UsersCollection.Drop(context.TODO())
-	defer database.PostsCollection.Drop(context.TODO())
 
 	r := gin.Default()
 

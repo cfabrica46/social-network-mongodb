@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -88,14 +89,16 @@ func GetUsers() (users []User, err error) {
 	if err != nil {
 		return
 	}
-
+	i := 0
 	for cur.Next(context.TODO()) {
+		fmt.Println(i)
 		var userAux User
 		err = cur.Decode(&userAux)
 		if err != nil {
 			return
 		}
 		users = append(users, userAux)
+		i++
 	}
 	//var usersLoaded []bson.M
 	//lookupStage := bson.D{{"$lookup", bson.D{{"from", "posts"}, {"localField", "_id"}, {"foreignField", "userID"}, {"as", "user_posts"}}}}
