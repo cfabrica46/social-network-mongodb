@@ -30,7 +30,7 @@ type Post struct {
 }
 
 type Token struct {
-	Content string `bson:"content"`
+	Content string `header:"Authorization-header"`
 }
 
 var (

@@ -14,16 +14,19 @@ import (
 )
 
 func main() {
-	sigs := make(chan os.Signal)
-	signal.Notify(sigs, syscall.SIGINT)
 
-	go func() {
-		<-sigs
-		database.UsersCollection.Drop(context.TODO())
-		database.PostsCollection.Drop(context.TODO())
-		os.Exit(0)
-	}()
-
+	//Solo para evitar acumulacion de datos en la Database.
+	//No se utilizara para el producto final.
+	{
+		sigs := make(chan os.Signal)
+		signal.Notify(sigs, syscall.SIGINT)
+		go func() {
+			<-sigs
+			database.UsersCollection.Drop(context.TODO())
+			database.PostsCollection.Drop(context.TODO())
+			os.Exit(0)
+		}()
+	}
 	log.SetFlags(log.Lshortfile)
 
 	go database.CleanBlackList()

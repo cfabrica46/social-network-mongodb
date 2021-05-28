@@ -44,7 +44,7 @@ func GetUserFromToken() gin.HandlerFunc {
 		}
 
 		check := database.CheckIfTokenIsInBlackList(Token.Authorization)
-		if !check {
+		if check {
 			c.JSON(500, gin.H{
 				"ErrMessage": "El Token no es válido",
 			})

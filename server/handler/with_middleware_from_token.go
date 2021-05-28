@@ -16,7 +16,7 @@ func LogOut(c *gin.Context) {
 
 	user := c.MustGet("user-data").(database.User)
 
-	err := database.InsertIntoBlackList(user.Token)
+	err := database.InsertTokenIntoBlackList(user.Token)
 
 	if err != nil {
 		c.JSON(500, gin.H{
@@ -34,7 +34,7 @@ func DeleteUser(c *gin.Context) {
 
 	user := c.MustGet("user-data").(database.User)
 
-	err := database.DeleteUser(user.ID.Hex())
+	err := database.DeleteUser(user.ID)
 
 	if err != nil {
 		c.JSON(500, gin.H{
