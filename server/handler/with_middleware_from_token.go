@@ -10,6 +10,12 @@ import (
 func Profile(c *gin.Context) {
 
 	user := c.MustGet("user-data").(database.User)
+	if user.ID.Hex() == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
 
 	c.JSON(http.StatusOK, user)
 }
@@ -17,9 +23,14 @@ func Profile(c *gin.Context) {
 func LogOut(c *gin.Context) {
 
 	user := c.MustGet("user-data").(database.User)
+	if user.ID.Hex() == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
 
 	err := database.InsertTokenIntoBlackList(user.Token)
-
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
@@ -35,9 +46,14 @@ func LogOut(c *gin.Context) {
 func DeleteUser(c *gin.Context) {
 
 	user := c.MustGet("user-data").(database.User)
+	if user.ID.Hex() == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
 
 	err := database.DeleteUser(user.ID)
-
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",

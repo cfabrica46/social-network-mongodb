@@ -11,9 +11,14 @@ import (
 func SignIn(c *gin.Context) {
 
 	user := c.MustGet("user-data").(database.User)
+	if user.ID.Hex() == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
 
 	err := database.GetUser(&user)
-
 	if err != nil {
 		c.JSON(http.StatusForbidden, gin.H{
 			"ErrMessage": "Usuario no encontrado",
@@ -38,6 +43,12 @@ func SignIn(c *gin.Context) {
 func SignUp(c *gin.Context) {
 
 	user := c.MustGet("user-data").(database.User)
+	if user.ID.Hex() == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
 
 	err := database.AddUser(user)
 	if err != nil {

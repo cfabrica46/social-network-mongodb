@@ -2,10 +2,9 @@ package middleware
 
 import (
 	"encoding/json"
-	"time"
+	"net/http"
 
 	"github.com/cfabrica46/social-network-mongodb/server/database"
-	"github.com/cfabrica46/social-network-mongodb/server/token"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,9 +14,8 @@ func GetUserFromBody() gin.HandlerFunc {
 		var user database.User
 
 		err := json.NewDecoder(c.Request.Body).Decode(&user)
-
 		if err != nil {
-			c.JSON(500, gin.H{
+			c.JSON(http.StatusInternalServerError, gin.H{
 				"ErrMessage": "Internal Error",
 			})
 			return
@@ -32,55 +30,48 @@ func GetUserFromBody() gin.HandlerFunc {
 func GetUserFromToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		var tokenValue database.Token
-
-		if err := c.ShouldBindHeader(&tokenValue); err != nil {
-			c.JSON(500, gin.H{
-				"ErrMessage": "Internal Error",
-			})
-			return
-		}
-
-		check := database.CheckIfTokenIsInBlackList(tokenValue.Content)
-		if check {
-			c.JSON(500, gin.H{
-				"ErrMessage": "El Token no es válido",
-			})
-			return
-		}
-
-		user, err := token.ExtractUserFromClaims(tokenValue.Content)
-
+		user, err := getUser(c)
 		if err != nil {
-			c.JSON(500, gin.H{
-				"ErrMessage": "Internal Error",
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"ErrMessage": err.Error(),
 			})
-			return
-		}
-
-		user.Token = tokenValue.Content
-
-		deadline, err := time.Parse(time.ANSIC, user.Deadline)
-
-		if err != nil {
-			c.JSON(500, gin.H{
-				"ErrMessage": "Internal Error",
-			})
-			return
-		}
-
-		checkTime := time.Now().Local().After(deadline)
-
-		if !checkTime {
-			c.JSON(500, gin.H{
-				"ErrMessage": "El Token no es válido",
-			})
-			return
 		}
 
 		c.Set("user-data", user)
 
 		c.Next()
 
+	}
+}
+
+func GetUserFromTokenAndNewUserDataFromBody() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var newUser database.User
+
+		user, err := getUser(c)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"ErrMessage": err.Error(),
+			})
+		}
+
+		err = json.NewDecoder(c.Request.Body).Decode(&newUser)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"ErrMessage": "Internal Error",
+			})
+			return
+		}
+
+		oldUserAndNewUser := struct {
+			OldUser database.User
+			NewUser database.User
+		}{
+			user,
+			newUser,
+		}
+
+		c.Set("old-and-new-user-data", oldUserAndNewUser)
+		c.Next()
 	}
 }
