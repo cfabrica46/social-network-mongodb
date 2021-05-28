@@ -17,6 +17,8 @@ func main() {
 
 	r := gin.Default()
 
+	r.GET("/users", handler.ShowUsers)
+
 	rGetUserFromBody := r.Group("/")
 	rGetUserFromBody.Use(middleware.GetUserFromBody())
 	{

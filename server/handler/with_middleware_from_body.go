@@ -66,3 +66,7 @@ func SignUp(c *gin.Context) {
 	})
 
 }
+
+func ShowUsers(c *gin.Context) {
+
+}

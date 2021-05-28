@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -50,6 +52,28 @@ func init() {
 	PostsCollection = DB.Collection("posts")
 	BlackListCollection = DB.Collection("black_list")
 
+	err = migrate()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func open() (client *mongo.Client, err error) {
+	host := "localhost"
+	port := 27017
+	clientOpts := options.Client().ApplyURI(fmt.Sprintf("mongodb://%s:%d", host, port))
+	client, err = mongo.Connect(context.TODO(), clientOpts)
+	if err != nil {
+		return
+	}
+	err = client.Ping(context.TODO(), nil)
+	if err != nil {
+		return
+	}
+	return
+}
+
+func migrate() (err error) {
 	users := []interface{}{
 		User{
 			ID:       [12]byte{},
@@ -80,21 +104,48 @@ func init() {
 		},
 	}
 
-	_, err = UsersCollection.InsertMany((context.TODO()), users)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func open() (client *mongo.Client, err error) {
-	host := "localhost"
-	port := 27017
-	clientOpts := options.Client().ApplyURI(fmt.Sprintf("mongodb://%s:%d", host, port))
-	client, err = mongo.Connect(context.TODO(), clientOpts)
+	insertManyUsers, err := UsersCollection.InsertMany((context.TODO()), users)
 	if err != nil {
 		return
 	}
-	err = client.Ping(context.TODO(), nil)
+
+	ids := []primitive.ObjectID{}
+
+	for _, v := range insertManyUsers.InsertedIDs {
+		if id, ok := v.(primitive.ObjectID); ok {
+			ids = append(ids, id)
+		}
+	}
+
+	posts := []interface{}{
+		Post{
+			UserID:  ids[0],
+			Content: "Hola",
+			Date:    time.Now().String(),
+		},
+		Post{
+			UserID:  ids[0],
+			Content: "Adios",
+			Date:    time.Now().String(),
+		},
+		Post{
+			UserID:  ids[1],
+			Content: "Hola que tal",
+			Date:    time.Now().String(),
+		},
+	}
+
+	for i := range ids {
+
+		postAux := Post{
+			UserID:  ids[i],
+			Content: "Message " + strconv.Itoa(i),
+			Date:    time.Now().String(),
+		}
+		posts = append(posts, postAux)
+	}
+
+	_, err = PostsCollection.InsertMany(context.TODO(), posts)
 	if err != nil {
 		return
 	}
