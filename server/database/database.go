@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -85,21 +84,45 @@ func CleanBlackList() {
 
 func GetUsers() (users []User, err error) {
 
-	cur, err := UsersCollection.Find(context.TODO(), bson.D{{}})
+	userCur, err := UsersCollection.Find(context.TODO(), bson.D{{}})
 	if err != nil {
 		return
 	}
-	i := 0
-	for cur.Next(context.TODO()) {
-		fmt.Println(i)
+	defer userCur.Close(context.TODO())
+	for userCur.Next(context.TODO()) {
 		var userAux User
-		err = cur.Decode(&userAux)
+		err = userCur.Decode(&userAux)
 		if err != nil {
 			return
 		}
 		users = append(users, userAux)
-		i++
 	}
+
+	posts := []Post{}
+
+	postCur, err := PostsCollection.Find(context.TODO(), bson.D{{}})
+	if err != nil {
+		return
+	}
+	defer postCur.Close(context.TODO())
+	for postCur.Next(context.TODO()) {
+		var postAux Post
+		err = postCur.Decode(&postAux)
+		if err != nil {
+			return
+		}
+		posts = append(posts, postAux)
+	}
+
+	for i := range posts {
+		for indx := range users {
+			if posts[i].UserID == users[indx].ID {
+				users[indx].Posts = append(users[indx].Posts, posts[i])
+				break
+			}
+		}
+	}
+
 	//var usersLoaded []bson.M
 	//lookupStage := bson.D{{"$lookup", bson.D{{"from", "posts"}, {"localField", "_id"}, {"foreignField", "userID"}, {"as", "user_posts"}}}}
 	//

@@ -123,7 +123,7 @@ func migrate() (err error) {
 
 		postAux := Post{
 			UserID:  ids[i],
-			Content: "Message " + strconv.Itoa(i),
+			Content: "Message " + strconv.Itoa(i+1),
 			Date:    time.Now().String(),
 		}
 		posts = append(posts, postAux)
