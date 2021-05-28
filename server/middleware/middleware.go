@@ -21,7 +21,7 @@ func GetUserFromBody() gin.HandlerFunc {
 			return
 		}
 
-		c.Set("user-data", user)
+		c.Set("user-data", &user)
 
 		c.Next()
 	}
@@ -37,7 +37,7 @@ func GetUserFromToken() gin.HandlerFunc {
 			})
 		}
 
-		c.Set("user-data", user)
+		c.Set("user-data", &user)
 
 		c.Next()
 
@@ -71,7 +71,7 @@ func GetUserFromTokenAndNewUserDataFromBody() gin.HandlerFunc {
 			newUser,
 		}
 
-		c.Set("old-and-new-user-data", oldUserAndNewUser)
+		c.Set("old-and-new-user-data", &oldUserAndNewUser)
 		c.Next()
 	}
 }

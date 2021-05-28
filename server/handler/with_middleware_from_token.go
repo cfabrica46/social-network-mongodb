@@ -9,21 +9,21 @@ import (
 
 func Profile(c *gin.Context) {
 
-	user := c.MustGet("user-data").(database.User)
-	if user.ID.Hex() == "" {
+	user := c.MustGet("user-data").(*database.User)
+	if user == nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, *user)
 }
 
 func LogOut(c *gin.Context) {
 
-	user := c.MustGet("user-data").(database.User)
-	if user.ID.Hex() == "" {
+	user := c.MustGet("user-data").(*database.User)
+	if user == nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
 		})
@@ -45,8 +45,8 @@ func LogOut(c *gin.Context) {
 
 func DeleteUser(c *gin.Context) {
 
-	user := c.MustGet("user-data").(database.User)
-	if user.ID.Hex() == "" {
+	user := c.MustGet("user-data").(*database.User)
+	if user == nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
 		})
