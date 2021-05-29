@@ -55,7 +55,7 @@ func main() {
 		rGetUserFromToken.GET("/user", handler.Profile)
 		rGetUserFromToken.GET("/logout", handler.LogOut)
 		rGetUserFromToken.DELETE("/user", handler.DeleteUser)
-		rGetUserFromToken.GET("/user/posts", handler.ShowPostsFromUser)
+		rGetUserFromToken.GET("/user/posts", handler.GetPostsFromUser)
 	}
 
 	rGetUserFromTokenAndNewDataFromBody := r.Group("/")

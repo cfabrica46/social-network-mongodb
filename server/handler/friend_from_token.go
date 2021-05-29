@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetPostsFromUser(c *gin.Context) {
+func GetFriendsFromUser(c *gin.Context) {
 
 	var err error
 
@@ -19,18 +19,10 @@ func GetPostsFromUser(c *gin.Context) {
 		return
 	}
 
-	posts, err := database.GetPostsFromUser(user.ID)
+	friends, err := database.GetFriendsFromUser(user.Friends)
 	if err != nil {
 		return
 	}
 
-	userWithPosts := struct {
-		User  database.User
-		Posts []database.Post
-	}{
-		*user,
-		posts,
-	}
-
-	c.JSON(http.StatusOK, userWithPosts)
+	return
 }

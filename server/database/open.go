@@ -53,49 +53,57 @@ func open() (client *mongo.Client, err error) {
 }
 
 func migrate() (err error) {
+
+	var users []interface{}
+
 	ids := []primitive.ObjectID{getIDForMigration("60b1c4924ab293de961da0e7"), getIDForMigration("60b1c4924ab293de961da0e8"), getIDForMigration("60b1c4924ab293de961da0e9"), getIDForMigration("60b1c4924ab293de961da0ea")}
 
-	users := []interface{}{
-		User{
+	if len(ids) == 4 {
+		cfabrica46 := User{
 			ID:       ids[0],
 			Username: "cfabrica46",
 			Password: "01234",
 			Role:     "admin",
 			Deadline: "",
 			Token:    "",
-			Posts:    []Post{},
 			Friends:  []primitive.ObjectID{ids[1], ids[2]},
-		},
-		User{
+		}
+		arthuronavah := User{
 			ID:       ids[1],
 			Username: "arthuronavah",
 			Password: "12345",
 			Role:     "admin",
 			Deadline: "",
 			Token:    "",
-			Posts:    []Post{},
 			Friends:  []primitive.ObjectID{ids[0]},
-		},
-		User{
+		}
+		luis := User{
 			ID:       ids[2],
 			Username: "luis",
 			Password: "lolsito123",
 			Role:     "member",
 			Deadline: "",
 			Token:    "",
-			Posts:    []Post{},
 			Friends:  []primitive.ObjectID{ids[0]},
-		},
-		User{
+		}
+		carlos := User{
 			ID:       ids[3],
 			Username: "carlos",
 			Password: "789",
 			Role:     "member",
 			Deadline: "",
 			Token:    "",
-			Posts:    []Post{},
 			Friends:  []primitive.ObjectID{},
-		},
+		}
+
+		users = []interface{}{
+			cfabrica46,
+			arthuronavah,
+			luis,
+			carlos,
+		}
+	} else {
+		log.Fatal(err)
 	}
 
 	_, err = UsersCollection.InsertMany((context.TODO()), users)

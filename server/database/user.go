@@ -75,30 +75,6 @@ func GetUsers() (users []User, err error) {
 		users = append(users, userAux)
 	}
 
-	posts := []Post{}
-
-	postCur, err := PostsCollection.Find(context.TODO(), bson.D{{}})
-	if err != nil {
-		return
-	}
-	defer postCur.Close(context.TODO())
-	for postCur.Next(context.TODO()) {
-		var postAux Post
-		err = postCur.Decode(&postAux)
-		if err != nil {
-			return
-		}
-		posts = append(posts, postAux)
-	}
-
-	for i := range posts {
-		for indx := range users {
-			if posts[i].UserID == users[indx].ID {
-				users[indx].Posts = append(users[indx].Posts, posts[i])
-				break
-			}
-		}
-	}
 	return
 
 }

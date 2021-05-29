@@ -17,21 +17,43 @@ func ShowUsers(c *gin.Context) {
 		return
 	}
 
+	usersWithPosts := []struct {
+		User  database.User
+		Posts []database.Post
+	}{}
+
 	for i := range users {
 		fmt.Println()
 		fmt.Printf("Debbug: ID: %24s | Username: %15s | Role: %5s | Token: %32s\n", users[i].ID.Hex(), users[i].Username, users[i].Role, users[i].Token)
 		fmt.Println()
 		fmt.Println("Posts:")
-		for indx := range users[i].Posts {
-			fmt.Printf("\t Content: %s\n", users[i].Posts[indx].Content)
+		posts, err := database.GetPostsFromUser(users[i].ID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"ErrMessage": "Internal Error",
+			})
+			return
+		}
+		for indx := range posts {
+			fmt.Printf("\t Content: %s\n", posts[indx].Content)
 		}
 		fmt.Println("Friends:")
 		for indx := range users[i].Friends {
 			fmt.Printf("\t Content: %s\n", users[i].Friends[indx].Hex())
 		}
+
+		userWithPosts := struct {
+			User  database.User
+			Posts []database.Post
+		}{
+			users[i],
+			posts,
+		}
+
+		usersWithPosts = append(usersWithPosts, userWithPosts)
 	}
 
 	fmt.Println()
-	c.JSON(http.StatusOK, users)
+	c.JSON(http.StatusOK, usersWithPosts)
 
 }

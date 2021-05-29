@@ -9,7 +9,6 @@ type User struct {
 	Role     string               `bson:"role"`
 	Deadline string               `bson:"deadline"`
 	Token    string               `bson:"token"`
-	Posts    []Post               `bson:"user_posts"`
 	Friends  []primitive.ObjectID `bson:"friends"`
 }
 
