@@ -4,7 +4,7 @@
 #curl -d '{"username":"cfabrica46","password":"01234"}' -X POST http://localhost:8080/signin
 
 #SignUp
-#curl -d '{"username":"carlos","password":"789"}' -X POST http://localhost:8080/signup
+#curl -d '{"username":"cfabrica46","password":"789"}' -X POST http://localhost:8080/signup
 
 #Profile
 #curl -H "Authorization-header: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZWFkLWxpbmUiOiJGcmkgTWF5IDI4IDE5OjUwOjM0IDIwMjEiLCJpZCI6IjYwYjE4MWJiNjNjMGE0ZjUyMGNiNTYyYiIsInJvbGUiOiJhZG1pbiIsInVzZXJuYW1lIjoiY2ZhYnJpY2E0NiIsInV1aWQiOiI0YWJiN2M2Mi0yNGU2LTRkOGEtYWQ5My1jZjJkYWE5NmI4N2IifQ.0CIG2m9PVsK1gpAG3cxorQohunPObAl9EiEV811HHnA" -X GET http://localhost:8080/user

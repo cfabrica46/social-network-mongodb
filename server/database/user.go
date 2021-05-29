@@ -101,3 +101,16 @@ func GetUsers() (users []User, err error) {
 	return
 
 }
+
+func CheckIfUserAlreadyExist(username string) (check bool, err error) {
+
+	var userAux User
+
+	err = UsersCollection.FindOne(context.TODO(), bson.M{"username": username}).Decode(&userAux)
+	if err != nil {
+		return
+	}
+
+	check = true
+	return
+}

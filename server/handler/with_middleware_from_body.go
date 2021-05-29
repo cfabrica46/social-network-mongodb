@@ -50,7 +50,21 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	err := database.AddUser(*user)
+	check, err := database.CheckIfUserAlreadyExist(user.Username)
+	if err != nil {
+		c.JSON(http.StatusForbidden, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
+	if check {
+		c.JSON(http.StatusForbidden, gin.H{
+			"ErrMessage": "El nombre del usuario ya esta en uso",
+		})
+		return
+	}
+
+	err = database.AddUser(*user)
 	if err != nil {
 		c.JSON(http.StatusForbidden, gin.H{
 			"ErrMessage": "El nombre del usuario ya esta en uso",
@@ -60,8 +74,8 @@ func SignUp(c *gin.Context) {
 
 	err = database.GetUser(user)
 	if err != nil {
-		c.JSON(http.StatusForbidden, gin.H{
-			"ErrMessage": "El nombre del usuario ya esta en uso",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
 		})
 		return
 	}
