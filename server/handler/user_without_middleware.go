@@ -25,6 +25,10 @@ func ShowUsers(c *gin.Context) {
 		for indx := range users[i].Posts {
 			fmt.Printf("\t Content: %s\n", users[i].Posts[indx].Content)
 		}
+		fmt.Println("Friends:")
+		for indx := range users[i].Friends {
+			fmt.Printf("\t Content: %s\n", users[i].Friends[indx].Hex())
+		}
 	}
 
 	fmt.Println()

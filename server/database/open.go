@@ -98,20 +98,15 @@ func migrate() (err error) {
 		},
 	}
 
-	insertManyUsers, err := UsersCollection.InsertMany((context.TODO()), users)
+	_, err = UsersCollection.InsertMany((context.TODO()), users)
 	if err != nil {
 		return
-	}
-
-	for _, v := range insertManyUsers.InsertedIDs {
-		if id, ok := v.(primitive.ObjectID); ok {
-			ids = append(ids, id)
-		}
 	}
 
 	posts := []interface{}{}
 
 	for indx := range ids {
+		fmt.Println(len(ids))
 		for i := 0; i < 4; i++ {
 			postAux := Post{
 				UserID:  ids[indx],
