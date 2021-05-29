@@ -12,27 +12,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type User struct {
-	ID       primitive.ObjectID `bson:"_id,omitempty"`
-	Username string             `bson:"username"`
-	Password string             `bson:"password"`
-	Role     string             `bson:"role"`
-	Deadline string             `bson:"deadline"`
-	Token    string             `bson:"token"`
-	Posts    []Post             `bson:"user_posts"`
-}
-
-type Post struct {
-	ID      primitive.ObjectID `bson:"_id,omitempty"`
-	UserID  primitive.ObjectID `bson:"user_id"`
-	Content string             `bson:"content"`
-	Date    string             `bson:"date"`
-}
-
-type Token struct {
-	Content string `header:"Authorization-header"`
-}
-
 var (
 	Client                                                *mongo.Client
 	DB                                                    *mongo.Database
@@ -74,33 +53,48 @@ func open() (client *mongo.Client, err error) {
 }
 
 func migrate() (err error) {
+	ids := []primitive.ObjectID{getIDForMigration("60b1c4924ab293de961da0e7"), getIDForMigration("60b1c4924ab293de961da0e8"), getIDForMigration("60b1c4924ab293de961da0e9"), getIDForMigration("60b1c4924ab293de961da0ea")}
+
 	users := []interface{}{
 		User{
-			ID:       [12]byte{},
+			ID:       ids[0],
 			Username: "cfabrica46",
 			Password: "01234",
 			Role:     "admin",
 			Deadline: "",
 			Token:    "",
 			Posts:    []Post{},
+			Friends:  []primitive.ObjectID{ids[1], ids[2]},
 		},
 		User{
-			ID:       [12]byte{},
+			ID:       ids[1],
 			Username: "arthuronavah",
 			Password: "12345",
 			Role:     "admin",
 			Deadline: "",
 			Token:    "",
 			Posts:    []Post{},
+			Friends:  []primitive.ObjectID{ids[0]},
 		},
 		User{
-			ID:       [12]byte{},
+			ID:       ids[2],
 			Username: "luis",
 			Password: "lolsito123",
 			Role:     "member",
 			Deadline: "",
 			Token:    "",
 			Posts:    []Post{},
+			Friends:  []primitive.ObjectID{ids[0]},
+		},
+		User{
+			ID:       ids[3],
+			Username: "carlos",
+			Password: "789",
+			Role:     "member",
+			Deadline: "",
+			Token:    "",
+			Posts:    []Post{},
+			Friends:  []primitive.ObjectID{},
 		},
 	}
 
@@ -108,8 +102,6 @@ func migrate() (err error) {
 	if err != nil {
 		return
 	}
-
-	ids := []primitive.ObjectID{}
 
 	for _, v := range insertManyUsers.InsertedIDs {
 		if id, ok := v.(primitive.ObjectID); ok {
@@ -119,19 +111,26 @@ func migrate() (err error) {
 
 	posts := []interface{}{}
 
-	for i := range ids {
-
-		postAux := Post{
-			UserID:  ids[i],
-			Content: "Message " + strconv.Itoa(i+1),
-			Date:    time.Now().String(),
+	for indx := range ids {
+		for i := 0; i < 4; i++ {
+			postAux := Post{
+				UserID:  ids[indx],
+				Content: "Message N-" + strconv.Itoa(i+1),
+				Date:    time.Now().String(),
+			}
+			posts = append(posts, postAux)
 		}
-		posts = append(posts, postAux)
+
 	}
 
 	_, err = PostsCollection.InsertMany(context.TODO(), posts)
 	if err != nil {
 		return
 	}
+	return
+}
+
+func getIDForMigration(idString string) (id primitive.ObjectID) {
+	id, _ = primitive.ObjectIDFromHex(idString)
 	return
 }
