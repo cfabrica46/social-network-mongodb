@@ -57,6 +57,7 @@ func main() {
 		rGetUserFromToken.DELETE("/user", handler.DeleteUser)
 		rGetUserFromToken.GET("/user/posts", handler.GetPostsFromUser)
 		rGetUserFromToken.GET("/user/friends", handler.GetFriendsFromUser)
+		rGetUserFromToken.GET("/user/friends/posts", handler.GetPostsFromFriends)
 	}
 
 	rGetUserFromTokenAndNewDataFromBody := r.Group("/")
@@ -68,7 +69,7 @@ func main() {
 	rGetUserFromTokenAndIDFriend := r.Group("/")
 	rGetUserFromTokenAndIDFriend.Use(middleware.GetUserFromTokenAndIDFriend())
 	{
-		rGetUserFromTokenAndIDFriend.GET("/user/friends/posts", handler.GetPostsOfFriends)
+		rGetUserFromTokenAndIDFriend.GET("/user/friend/posts", handler.GetPostsOfFriends)
 	}
 
 	r.Run(":8080")
