@@ -65,6 +65,12 @@ func main() {
 		rGetUserFromTokenAndNewDataFromBody.PUT("/user", handler.UpdateUser)
 	}
 
+	rGetUserFromTokenAndIDFriend := r.Group("/")
+	rGetUserFromTokenAndIDFriend.Use(middleware.GetUserFromTokenAndIDFriend())
+	{
+		rGetUserFromTokenAndIDFriend.GET("/user/friends/posts", handler.GetPostsOfFriends)
+	}
+
 	r.Run(":8080")
 
 }
