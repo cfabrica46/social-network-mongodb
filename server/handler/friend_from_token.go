@@ -8,7 +8,6 @@ import (
 )
 
 func GetFriendsFromUser(c *gin.Context) {
-
 	var err error
 
 	user := c.MustGet("user-data").(*database.User)
@@ -24,5 +23,14 @@ func GetFriendsFromUser(c *gin.Context) {
 		return
 	}
 
-	return
+	userWithFriends := struct {
+		User    database.User
+		Friends []database.User
+	}{
+		*user,
+		friends,
+	}
+
+	c.JSON(http.StatusOK, userWithFriends)
+
 }

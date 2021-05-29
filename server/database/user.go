@@ -9,16 +9,26 @@ import (
 )
 
 func GetUser(user *User) (err error) {
-
 	var userAux User
 
-	err = UsersCollection.FindOne(context.TODO(), bson.M{"username": user.Username, "password": user.Password}).Decode(&userAux)
+	err = UsersCollection.FindOne(context.TODO(), bson.D{{"username", user.ID}, {"password", user.Password}}).Decode(&userAux)
 	if err != nil {
 		return
 	}
 
 	*user = userAux
+	return
+}
 
+func GetUserFromID(user *User) (err error) {
+	var userAux User
+
+	err = UsersCollection.FindOne(context.TODO(), bson.D{{"_id", user.ID}}).Decode(&userAux)
+	if err != nil {
+		return
+	}
+
+	*user = userAux
 	return
 }
 

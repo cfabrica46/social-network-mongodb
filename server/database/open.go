@@ -114,7 +114,6 @@ func migrate() (err error) {
 	posts := []interface{}{}
 
 	for indx := range ids {
-		fmt.Println(len(ids))
 		for i := 0; i < 4; i++ {
 			postAux := Post{
 				UserID:  ids[indx],

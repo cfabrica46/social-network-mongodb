@@ -35,6 +35,15 @@ func GetUserFromToken() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"ErrMessage": err.Error(),
 			})
+			return
+		}
+
+		err = database.GetUserFromID(&user)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"ErrMessage": err.Error(),
+			})
+			return
 		}
 
 		c.Set("user-data", &user)
@@ -46,6 +55,7 @@ func GetUserFromToken() gin.HandlerFunc {
 
 func GetUserFromTokenAndNewUserDataFromBody() gin.HandlerFunc {
 	return func(c *gin.Context) {
+
 		var newUser database.User
 
 		user, err := getUser(c)
@@ -53,6 +63,15 @@ func GetUserFromTokenAndNewUserDataFromBody() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"ErrMessage": err.Error(),
 			})
+			return
+		}
+
+		err = database.GetUserFromID(&user)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"ErrMessage": err.Error(),
+			})
+			return
 		}
 
 		err = json.NewDecoder(c.Request.Body).Decode(&newUser)
