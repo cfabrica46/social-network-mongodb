@@ -57,6 +57,12 @@ func main() {
 		rGetUserFromToken.DELETE("/user", handler.DeleteUser)
 	}
 
+	rGetUserFromTokenAndNewDataFromBody := r.Group("/")
+	rGetUserFromTokenAndNewDataFromBody.Use(middleware.GetUserFromTokenAndNewUserDataFromBody())
+	{
+		rGetUserFromTokenAndNewDataFromBody.PUT("/user", handler.UpdateUser)
+	}
+
 	r.Run(":8080")
 
 }

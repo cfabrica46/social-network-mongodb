@@ -21,9 +21,23 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
+	check, err := database.CheckIfUserAlreadyExist(userWithNewData.NewUsername)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
+	if check {
+		c.JSON(http.StatusForbidden, gin.H{
+			"ErrMessage": "El nombre del usuario ya esta en uso",
+		})
+		return
+	}
+
 	user := userWithNewData.User
 
-	err := database.UpdateUser(&user, userWithNewData.NewUsername, userWithNewData.NewPassword)
+	err = database.UpdateUser(&user, userWithNewData.NewUsername, userWithNewData.NewPassword)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",

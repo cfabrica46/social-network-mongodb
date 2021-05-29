@@ -5,6 +5,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func GetUser(user *User) (err error) {
@@ -108,6 +109,9 @@ func CheckIfUserAlreadyExist(username string) (check bool, err error) {
 
 	err = UsersCollection.FindOne(context.TODO(), bson.M{"username": username}).Decode(&userAux)
 	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			err = nil
+		}
 		return
 	}
 

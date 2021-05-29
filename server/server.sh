@@ -13,4 +13,6 @@
 #curl -X GET http://localhost:8080/users
 
 #Delete
-#curl -H "Authorization-header: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZWFkLWxpbmUiOiJGcmkgTWF5IDI4IDE5OjMwOjM5IDIwMjEiLCJpZCI6IjYwYjE3Y2IyZWQwMjhjYjNiZmY0MTQ2NiIsInJvbGUiOiJhZG1pbiIsInVzZXJuYW1lIjoiY2ZhYnJpY2E0NiIsInV1aWQiOiI5NGI2NzYzZi05NjY3LTRjMjQtYTkzNS1kM2E3YjBmNzUwMDMifQ.dZXdgWnGSyHg7M1FvLffDNwKHIc16JjzgVOW04GLEiY" -X DELETE http://localhost:8080/user
+
+#Update
+#curl -d '{"username":"uwu","password":"owo"}' -H "Authorization-header: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZWFkLWxpbmUiOiJGcmkgTWF5IDI4IDIxOjU4OjA4IDIwMjEiLCJpZCI6IjYwYjE5ZjllYmZhYjJlNzI4MTJkOTI4MiIsInJvbGUiOiJhZG1pbiIsInVzZXJuYW1lIjoiY2ZhYnJpY2E0NiIsInV1aWQiOiI4ODhlNzJhNC0yZTI4LTQ5OWMtOWYwMC1hNGIwNDgxMWI3MDUifQ.LDG43hC3iUExZ5LNTfnwIWa2WYE6xqmlRgdro9vtu70" -X PUT http://localhost:8080/user
