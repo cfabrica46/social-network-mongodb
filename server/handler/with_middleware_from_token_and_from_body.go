@@ -1,21 +1,31 @@
 package handler
 
 import (
+	"net/http"
+
+	"github.com/cfabrica46/social-network-mongodb/server/database"
 	"github.com/gin-gonic/gin"
 )
 
 func UpdateUser(c *gin.Context) {
 
-	//oldUserAndNewUser := c.MustGet("old-and-new-user-data").(struct {
-	//	OldUser database.User
-	//	NewUser database.User
-	//})
+	userWithNewData := &struct {
+		User                     database.User
+		NewUsername, NewPassword string
+	}{}
 
-	//if oldUserAndNewUser.OldUser == database.User{} {
-	//	c.JSON(http.StatusInternalServerError, gin.H{
-	//		"ErrMessage": "Internal Error",
-	//	})
-	//	return
-	//}
+	if userWithNewData == nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
 
+	err := database.UpdateUser(&userWithNewData.User, userWithNewData.NewUsername, userWithNewData.NewPassword)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
 }

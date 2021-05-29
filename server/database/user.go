@@ -33,6 +33,21 @@ func AddUser(user User) (err error) {
 	return
 }
 
+func UpdateUser(user *User, newUsername, newPassword string) (err error) {
+
+	_, err = UsersCollection.UpdateOne(context.TODO(), bson.M{"_id": user.ID}, bson.D{
+		{"$set", bson.D{{"username", newUsername}, {"password", newPassword}}},
+	})
+	if err != nil {
+		return
+	}
+
+	user.Username = newUsername
+	user.Password = newPassword
+
+	return
+}
+
 func DeleteUser(id primitive.ObjectID) (err error) {
 
 	_, err = UsersCollection.DeleteOne(context.TODO(), bson.M{"_id": id})

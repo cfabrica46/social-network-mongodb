@@ -63,15 +63,16 @@ func GetUserFromTokenAndNewUserDataFromBody() gin.HandlerFunc {
 			return
 		}
 
-		oldUserAndNewUser := struct {
-			OldUser database.User
-			NewUser database.User
+		userWithNewData := struct {
+			User                     database.User
+			NewUsername, NewPassword string
 		}{
 			user,
-			newUser,
+			newUser.Username,
+			newUser.Password,
 		}
 
-		c.Set("old-and-new-user-data", &oldUserAndNewUser)
+		c.Set("old-and-new-user-data", &userWithNewData)
 		c.Next()
 	}
 }
