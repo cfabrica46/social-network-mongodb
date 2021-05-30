@@ -158,7 +158,7 @@ func GetPostsFromFriends(c *gin.Context) {
 
 	}
 
-	err = ordenarStructFriendsPosts(&friendsPosts)
+	err = ordenarStructFriendsPosts(friendsPosts)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",

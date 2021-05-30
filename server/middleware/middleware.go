@@ -26,7 +26,6 @@ func GetUserFromBody(c *gin.Context) {
 	fmt.Println(user)
 
 	c.Set("user-data", &user)
-
 	c.Next()
 
 }
