@@ -121,6 +121,7 @@ func GetPostsOfFriend(c *gin.Context) {
 }
 
 func GetPostsFromFriends(c *gin.Context) {
+	var ids []primitive.ObjectID
 
 	user := c.MustGet("user-data").(*database.User)
 	if user == nil {
@@ -130,35 +131,19 @@ func GetPostsFromFriends(c *gin.Context) {
 		return
 	}
 
-	friendsPosts := []struct {
-		Post, Date, Author string
-	}{}
-
 	friends, err := database.GetFriendsFromUser(user.Friends)
 	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
 		return
 	}
 
 	for i := range friends {
-		posts, err := database.GetPostsFromUser(friends[i].ID)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"ErrMessage": "Internal Error",
-			})
-			return
-		}
-
-		for indx := range posts {
-			friendPost := struct {
-				Post, Date, Author string
-			}{posts[indx].Content, posts[indx].Date, friends[i].Username}
-
-			friendsPosts = append(friendsPosts, friendPost)
-		}
-
+		ids = append(ids, friends[i].ID)
 	}
 
-	err = ordenarStructFriendsPosts(friendsPosts)
+	friendsPosts, err := database.GetPostsFromIDsFriends(ids)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
