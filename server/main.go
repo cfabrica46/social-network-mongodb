@@ -43,33 +43,23 @@ func main() {
 	r.GET("/users", handler.ShowUsers)
 
 	rGetUserFromBody := r.Group("/")
-	rGetUserFromBody.Use(middleware.GetUserFromBody())
+	rGetUserFromBody.Use(middleware.GetUserFromBody)
 	{
 		rGetUserFromBody.POST("/signin", handler.SignIn)
 		rGetUserFromBody.POST("/signup", handler.SignUp)
 	}
 
 	rGetUserFromToken := r.Group("/")
-	rGetUserFromToken.Use(middleware.GetUserFromToken())
+	rGetUserFromToken.Use(middleware.GetUserFromToken)
 	{
-		rGetUserFromToken.GET("/user", handler.Profile)
 		rGetUserFromToken.GET("/logout", handler.LogOut)
+		rGetUserFromToken.GET("/user", handler.Profile)
 		rGetUserFromToken.DELETE("/user", handler.DeleteUser)
+		rGetUserFromToken.PUT("/user", handler.UpdateUser)
 		rGetUserFromToken.GET("/user/posts", handler.GetPostsFromUser)
 		rGetUserFromToken.GET("/user/friends", handler.GetFriendsFromUser)
+		rGetUserFromToken.GET("/user/friend/posts", handler.GetPostsOfFriend)
 		rGetUserFromToken.GET("/user/friends/posts", handler.GetPostsFromFriends)
-	}
-
-	rGetUserFromTokenAndNewDataFromBody := r.Group("/")
-	rGetUserFromTokenAndNewDataFromBody.Use(middleware.GetUserFromTokenAndNewUserDataFromBody())
-	{
-		rGetUserFromTokenAndNewDataFromBody.PUT("/user", handler.UpdateUser)
-	}
-
-	rGetUserFromTokenAndIDFriend := r.Group("/")
-	rGetUserFromTokenAndIDFriend.Use(middleware.GetUserFromTokenAndIDFriend())
-	{
-		rGetUserFromTokenAndIDFriend.GET("/user/friend/posts", handler.GetPostsOfFriends)
 	}
 
 	r.Run(":8080")

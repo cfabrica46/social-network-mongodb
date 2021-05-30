@@ -24,13 +24,5 @@ func GetPostsFromUser(c *gin.Context) {
 		return
 	}
 
-	userWithPosts := struct {
-		User  database.User
-		Posts []database.Post
-	}{
-		*user,
-		posts,
-	}
-
-	c.JSON(http.StatusOK, userWithPosts)
+	c.JSON(http.StatusOK, posts)
 }

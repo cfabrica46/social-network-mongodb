@@ -2,166 +2,92 @@ package middleware
 
 import (
 	"encoding/json"
-	"io"
+	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/cfabrica46/social-network-mongodb/server/database"
+	"github.com/cfabrica46/social-network-mongodb/server/token"
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type Friend struct {
-	ID string `json:"id"`
+func GetUserFromBody(c *gin.Context) {
+
+	var user database.User
+
+	err := json.NewDecoder(c.Request.Body).Decode(&user)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
+
+	fmt.Println(user)
+
+	c.Set("user-data", &user)
+
+	c.Next()
+
 }
 
-func GetUserFromBody() gin.HandlerFunc {
-	return func(c *gin.Context) {
+func GetUserFromToken(c *gin.Context) {
 
-		var user database.User
+	var tokenValue database.Token
 
-		err := json.NewDecoder(c.Request.Body).Decode(&user)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"ErrMessage": "Internal Error",
-			})
-			return
-		}
-
-		c.Set("user-data", &user)
-
-		c.Next()
+	if err := c.ShouldBindHeader(&tokenValue); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
 	}
-}
 
-func GetUserFromToken() gin.HandlerFunc {
-	return func(c *gin.Context) {
-
-		user, err := getUser(c)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"ErrMessage": err.Error(),
-			})
-			return
-		}
-
-		err = database.GetUserFromID(&user)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"ErrMessage": err.Error(),
-			})
-			return
-		}
-
-		c.Set("user-data", &user)
-		c.Next()
-
+	check := database.CheckIfTokenIsInBlackList(tokenValue.Content)
+	if check {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "El Token no es válido",
+		})
+		return
 	}
-}
 
-func GetUserFromTokenAndNewUserDataFromBody() gin.HandlerFunc {
-	return func(c *gin.Context) {
+	user, err := token.ExtractUserFromClaims(tokenValue.Content)
 
-		var newUser database.User
-
-		user, err := getUser(c)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"ErrMessage": err.Error(),
-			})
-			return
-		}
-
-		err = database.GetUserFromID(&user)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"ErrMessage": err.Error(),
-			})
-			return
-		}
-
-		err = json.NewDecoder(c.Request.Body).Decode(&newUser)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"ErrMessage": "Internal Error",
-			})
-			return
-		}
-
-		userWithNewData := struct {
-			User                     database.User
-			NewUsername, NewPassword string
-		}{
-			user,
-			newUser.Username,
-			newUser.Password,
-		}
-
-		c.Set("old-and-new-user-data", &userWithNewData)
-		c.Next()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
 	}
-}
 
-func GetUserFromTokenAndIDFriend() gin.HandlerFunc {
-	return func(c *gin.Context) {
+	user.Token = tokenValue.Content
 
-		var check bool
+	deadline, err := time.Parse(time.ANSIC, user.Deadline)
 
-		user, err := getUser(c)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"ErrMessage": err.Error(),
-			})
-			return
-		}
-
-		err = database.GetUserFromID(&user)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"ErrMessage": err.Error(),
-			})
-			return
-		}
-
-		friendID := Friend{}
-
-		err = json.NewDecoder(c.Request.Body).Decode(&friendID)
-		if err != nil {
-			if err != io.EOF {
-				c.JSON(http.StatusInternalServerError, gin.H{
-					"ErrMessage": "Internal Error",
-				})
-				return
-			}
-		}
-
-		id, err := primitive.ObjectIDFromHex(friendID.ID)
-
-		for i := range user.Friends {
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{
-					"ErrMessage": "Internal Error",
-				})
-				return
-			}
-			if id == user.Friends[i] {
-				check = true
-				break
-			}
-		}
-
-		if !check {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"ErrMessage": "The selected id is not from a friend",
-			})
-			return
-		}
-
-		userWithFriendID := struct {
-			User     database.User
-			FriendID primitive.ObjectID
-		}{user, id}
-
-		c.Set("user-data-friend-id", &userWithFriendID)
-		c.Next()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
 	}
+
+	checkTime := time.Now().Local().After(deadline)
+
+	if !checkTime {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "El Token no es válido",
+		})
+		return
+	}
+
+	err = database.GetUserFromID(&user)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": err.Error(),
+		})
+		return
+	}
+
+	c.Set("user-data", &user)
+	c.Next()
+
 }

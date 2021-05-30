@@ -1,6 +1,9 @@
 package handler
 
 import (
+	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/cfabrica46/social-network-mongodb/server/database"
@@ -24,36 +27,39 @@ func GetFriendsFromUser(c *gin.Context) {
 		return
 	}
 
-	userWithFriends := struct {
-		User    database.User
-		Friends []database.User
-	}{
-		*user,
-		friends,
-	}
-
-	c.JSON(http.StatusOK, userWithFriends)
+	c.JSON(http.StatusOK, friends)
 
 }
 
-func GetPostsOfFriends(c *gin.Context) {
+func GetPostsOfFriend(c *gin.Context) {
 
-	userWithFriendID := c.MustGet("user-data-friend-id").(*struct {
-		User     database.User
-		FriendID primitive.ObjectID
-	})
-	if userWithFriendID == nil {
+	var check bool
+
+	user := c.MustGet("user-data").(*database.User)
+	if user == nil {
+		fmt.Println(1)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
 		})
 		return
 	}
 
-	friend := database.User{ID: userWithFriendID.FriendID}
+	friendID := struct {
+		ID string `json:"id"`
+	}{}
 
-	database.GetUserFromID(&friend)
+	err := json.NewDecoder(c.Request.Body).Decode(&friendID)
+	if err != nil {
+		if err != io.EOF {
+			fmt.Println(err)
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"ErrMessage": "Internal Error",
+			})
+			return
+		}
+	}
 
-	posts, err := database.GetPostsFromUser(friend.ID)
+	id, err := primitive.ObjectIDFromHex(friendID.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
@@ -61,26 +67,56 @@ func GetPostsOfFriends(c *gin.Context) {
 		return
 	}
 
-	friendStruct := struct {
-		User  database.User
-		Posts []database.Post
+	for i := range user.Friends {
+		if err != nil {
+			fmt.Println(3)
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"ErrMessage": "Internal Error",
+			})
+			return
+		}
+		if id == user.Friends[i] {
+			check = true
+			break
+		}
+	}
+
+	if !check {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"ErrMessage": "The selected id is not from a friend",
+		})
+		return
+	}
+
+	friend := database.User{ID: id}
+
+	err = database.GetUserFromID(&friend)
+	if err != nil {
+		fmt.Println(4)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
+
+	posts, err := database.GetPostsFromUser(friend.ID)
+	if err != nil {
+		fmt.Println(5)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
+
+	friendAndPosts := struct {
+		Friend database.User
+		Posts  []database.Post
 	}{
 		friend,
 		posts,
 	}
 
-	userWithFriendAndPosts := struct {
-		User         database.User
-		FriendStruct struct {
-			User  database.User
-			Posts []database.Post
-		}
-	}{
-		userWithFriendID.User,
-		friendStruct,
-	}
-
-	c.JSON(http.StatusOK, userWithFriendAndPosts)
+	c.JSON(http.StatusOK, friendAndPosts)
 
 }
 
@@ -130,16 +166,6 @@ func GetPostsFromFriends(c *gin.Context) {
 		return
 	}
 
-	friendsStruct := struct {
-		User        database.User
-		FriendPosts []struct {
-			Post, Date, Author string
-		}
-	}{
-		*user,
-		friendsPosts,
-	}
-
-	c.JSON(http.StatusOK, friendsStruct)
+	c.JSON(http.StatusOK, friendsPosts)
 
 }
