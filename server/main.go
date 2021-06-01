@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -40,26 +41,31 @@ func main() {
 
 	r := gin.Default()
 
-	r.GET("/users", handler.ShowUsers)
+	r.StaticFS("/files", http.Dir("files"))
 
-	rGetUserFromBody := r.Group("/")
-	rGetUserFromBody.Use(middleware.GetUserFromBody)
+	s := r.Group("/api/v1")
 	{
-		rGetUserFromBody.POST("/signin", handler.SignIn)
-		rGetUserFromBody.POST("/signup", handler.SignUp)
-	}
+		s.GET("/users", handler.ShowUsers)
 
-	rGetUserFromToken := r.Group("/")
-	rGetUserFromToken.Use(middleware.GetUserFromToken)
-	{
-		rGetUserFromToken.GET("/logout", handler.LogOut)
-		rGetUserFromToken.GET("/user", handler.Profile)
-		rGetUserFromToken.DELETE("/user", handler.DeleteUser)
-		rGetUserFromToken.PUT("/user", handler.UpdateUser)
-		rGetUserFromToken.GET("/user/posts", handler.GetPostsFromUser)
-		rGetUserFromToken.GET("/user/friends", handler.GetFriendsFromUser)
-		rGetUserFromToken.GET("/friend/:username/posts", handler.GetPostsOfFriend)
-		rGetUserFromToken.GET("/friends/posts", handler.GetPostsFromFriends)
+		sGetUserFromBody := s.Group("/")
+		sGetUserFromBody.Use(middleware.GetUserFromBody)
+		{
+			sGetUserFromBody.POST("/signin", handler.SignIn)
+			sGetUserFromBody.POST("/signup", handler.SignUp)
+		}
+
+		sGetUserFromToken := s.Group("/")
+		sGetUserFromToken.Use(middleware.GetUserFromToken)
+		{
+			sGetUserFromToken.GET("/logout", handler.LogOut)
+			sGetUserFromToken.GET("/user", handler.Profile)
+			sGetUserFromToken.DELETE("/user", handler.DeleteUser)
+			sGetUserFromToken.PUT("/user", handler.UpdateUser)
+			sGetUserFromToken.GET("/user/posts", handler.GetPostsFromUser)
+			sGetUserFromToken.GET("/user/friends", handler.GetFriendsFromUser)
+			sGetUserFromToken.GET("/friend/:username/posts", handler.GetPostsOfFriend)
+			sGetUserFromToken.GET("/friends/posts", handler.GetPostsFromFriends)
+		}
 	}
 
 	r.Run(":8080")
