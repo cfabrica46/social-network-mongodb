@@ -1,9 +1,7 @@
 package handler
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 
 	"github.com/cfabrica46/social-network-mongodb/server/database"
@@ -37,30 +35,18 @@ func GetPostsOfFriend(c *gin.Context) {
 
 	user := c.MustGet("user-data").(*database.User)
 	if user == nil {
-		fmt.Println(1)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
 		})
 		return
 	}
 
-	friendID := struct {
-		ID string `json:"id"`
-	}{}
+	usernameFriend := c.Param("username")
 
-	err := json.NewDecoder(c.Request.Body).Decode(&friendID)
+	friend, err := database.GetUserFromUsername(usernameFriend)
 	if err != nil {
-		if err != io.EOF {
-			fmt.Println(err)
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"ErrMessage": "Internal Error",
-			})
-			return
-		}
-	}
+		fmt.Println(err)
 
-	id, err := primitive.ObjectIDFromHex(friendID.ID)
-	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
 		})
@@ -69,13 +55,12 @@ func GetPostsOfFriend(c *gin.Context) {
 
 	for i := range user.Friends {
 		if err != nil {
-			fmt.Println(3)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"ErrMessage": "Internal Error",
 			})
 			return
 		}
-		if id == user.Friends[i] {
+		if friend.ID == user.Friends[i] {
 			check = true
 			break
 		}
@@ -88,11 +73,8 @@ func GetPostsOfFriend(c *gin.Context) {
 		return
 	}
 
-	friend := database.User{ID: id}
-
 	err = database.GetUserFromID(&friend)
 	if err != nil {
-		fmt.Println(4)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
 		})
@@ -101,7 +83,6 @@ func GetPostsOfFriend(c *gin.Context) {
 
 	posts, err := database.GetPostsFromUser(friend.ID)
 	if err != nil {
-		fmt.Println(5)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
 		})

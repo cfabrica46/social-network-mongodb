@@ -20,5 +20,5 @@ type Post struct {
 }
 
 type Token struct {
-	Content string `header:"Authorization-header"`
+	Content string `header:"Authorization"`
 }

@@ -32,6 +32,16 @@ func GetUserFromID(user *User) (err error) {
 	return
 }
 
+func GetUserFromUsername(username string) (user User, err error) {
+
+	err = UsersCollection.FindOne(context.TODO(), bson.M{"username": username}).Decode(&user)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
 func AddUser(user User) (err error) {
 
 	user.Role = "member"

@@ -58,8 +58,8 @@ func main() {
 		rGetUserFromToken.PUT("/user", handler.UpdateUser)
 		rGetUserFromToken.GET("/user/posts", handler.GetPostsFromUser)
 		rGetUserFromToken.GET("/user/friends", handler.GetFriendsFromUser)
-		rGetUserFromToken.GET("/user/friend/posts", handler.GetPostsOfFriend)
-		rGetUserFromToken.GET("/user/friends/posts", handler.GetPostsFromFriends)
+		rGetUserFromToken.GET("/friend/:username/posts", handler.GetPostsOfFriend)
+		rGetUserFromToken.GET("/friends/posts", handler.GetPostsFromFriends)
 	}
 
 	r.Run(":8080")
