@@ -54,12 +54,6 @@ func GetPostsOfFriend(c *gin.Context) {
 	}
 
 	for i := range user.Friends {
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"ErrMessage": "Internal Error",
-			})
-			return
-		}
 		if friend.ID == user.Friends[i] {
 			check = true
 			break
