@@ -40,25 +40,24 @@ func GetUserFromToken(c *gin.Context) {
 	var tokenValue database.Token
 
 	if err := c.ShouldBindHeader(&tokenValue); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"ErrMessage": "Internal Error",
+		c.JSON(http.StatusBadRequest, gin.H{
+			"ErrMessage": "Bad Request",
 		})
 		return
 	}
 
 	check := database.CheckIfTokenIsInBlackList(tokenValue.Content)
 	if check {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"ErrMessage": "El Token no es válido",
 		})
 		return
 	}
 
 	user, err := token.ExtractUserFromClaims(tokenValue.Content)
-
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"ErrMessage": "Internal Error",
+		c.JSON(http.StatusBadRequest, gin.H{
+			"ErrMessage": "El Token no es válido",
 		})
 		return
 	}
@@ -66,7 +65,6 @@ func GetUserFromToken(c *gin.Context) {
 	user.Token = tokenValue.Content
 
 	deadline, err := time.Parse(time.ANSIC, user.Deadline)
-
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
@@ -77,7 +75,7 @@ func GetUserFromToken(c *gin.Context) {
 	checkTime := time.Now().Local().After(deadline)
 
 	if !checkTime {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"ErrMessage": "El Token no es válido",
 		})
 		return
