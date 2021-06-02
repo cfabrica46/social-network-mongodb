@@ -6,13 +6,13 @@ btn.addEventListener("click", (e) => {
     e.preventDefault();
 
     let User = {
-        //        ID: null,
+        ID: "",
         Username: username.value,
         Password: password.value,
-        //        Role: null,
-        //        Deadline: null,
-        //        Token: null,
-        //        Friends: null
+        Role: "",
+        Deadline: "",
+        Token: "",
+        Friends: []
     };
 
     console.log(User);

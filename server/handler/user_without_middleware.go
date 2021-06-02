@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -16,6 +17,8 @@ func ShowUsers(c *gin.Context) {
 		})
 		return
 	}
+	du, _ := json.Marshal(users[0])
+	fmt.Printf("%s\n", du)
 
 	usersWithPosts := []struct {
 		User  database.User
