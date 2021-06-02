@@ -36,7 +36,7 @@ function userFriends() {
             }
             document.getElementById("body").appendChild(listFriends)
 
-            btnIndex.addEventListener("click", () => backToIndex())
+            btnIndex.addEventListener("click", backToIndex)
 
         } else if (this.status === 400) {
 
@@ -110,6 +110,6 @@ function backToIndex() {
     body.innerHTML = originBody
 
     let btnUserFriends = document.getElementById("btn-User-Friends")
-    btnUserFriends.addEventListener("click", () => userFriends());
+    btnUserFriends.addEventListener("click", userFriends);
 
 }
