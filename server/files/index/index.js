@@ -2,7 +2,7 @@ var originBody = document.getElementById("body").innerHTML
 let btnUserFriends = document.getElementById("btn-User-Friends")
 var tokenString;
 
-btnUserFriends.addEventListener("click", () => userFriends());
+btnUserFriends.addEventListener("click", userFriends);
 
 function userFriends() {
 
@@ -39,11 +39,10 @@ function userFriends() {
             btnIndex.addEventListener("click", () => backToIndex())
 
         } else if (this.status === 400) {
-            if (i === 0) {
-                btnUserFriends.remove();
-                login();
-                i++;
-            };
+
+            btnUserFriends.remove();
+            login();
+
         };
 
     };
