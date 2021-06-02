@@ -1,55 +1,98 @@
 var originBody = document.getElementById("body").innerHTML
 let btnUserFriends = document.getElementById("btn-User-Friends")
-var tokenString;
 
 btnUserFriends.addEventListener("click", userFriends);
 
 function userFriends() {
-
     const xhttpUserFriends = new XMLHttpRequest();
 
     let i = 0;
 
     xhttpUserFriends.onreadystatechange = function () {
 
-        if (this.readyState === 4 && this.status === 200) {
+        getStatus(this.readyState, this.status)
+            .then(function () {
 
-            let title = document.getElementById("title")
-            let form = document.getElementById("form")
-            let btnIndex = document.getElementById("btn-index")
-            let friends = JSON.parse(this.responseText)
+                let title = document.getElementById("title")
+                let form = document.getElementById("form")
+                let btnIndex = document.getElementById("btn-index")
+                let friends = JSON.parse(this.responseText)
 
-            title.textContent = "List Of Friends"
-            form.remove()
-            btnIndex.textContent = "Back To Index"
-            console.log(friends)
+                title.textContent = "List Of Friends"
+                form.remove()
+                btnIndex.textContent = "Back To Index"
+                console.log(friends)
 
-            let listFriends = document.createElement("ul")
+                let listFriends = document.createElement("ul")
 
-            for (friend of friends) {
-                const ulUser = document.createElement("ul")
-                ulUser.innerHTML += `<li><h2>User: ${friend.Username}</h2></li>
+                for (friend of friends) {
+                    const ulUser = document.createElement("ul")
+                    ulUser.innerHTML += `<li><h2>User: ${friend.Username}</h2></li>
                                     <li>ID: ${friend.ID}</li><br>
                                     <li>Password: ${friend.Password}</li><br>
                                     <li>Role: ${friend.Role}</li><br><br>`
-                listFriends.appendChild(ulUser)
-            }
-            document.getElementById("body").appendChild(listFriends)
+                    listFriends.appendChild(ulUser)
+                }
+                document.getElementById("body").appendChild(listFriends)
 
-            btnIndex.addEventListener("click", backToIndex)
+                btnIndex.addEventListener("click", backToIndex)
+            })
 
-        } else if (this.status === 400) {
+            .catch(function () {
+                console.log(localStorage.getItem("token"))
+                btnUserFriends.remove();
+                login();
+            })
 
-            btnUserFriends.remove();
-            login();
-
-        };
+        // if (this.readyState === 4 && this.status === 200) {
+        //
+        //     let title = document.getElementById("title")
+        //     let form = document.getElementById("form")
+        //     let btnIndex = document.getElementById("btn-index")
+        //     let friends = JSON.parse(this.responseText)
+        //
+        //     title.textContent = "List Of Friends"
+        //     form.remove()
+        //     btnIndex.textContent = "Back To Index"
+        //     console.log(friends)
+        //
+        //     let listFriends = document.createElement("ul")
+        //
+        //     for (friend of friends) {
+        //         const ulUser = document.createElement("ul")
+        //         ulUser.innerHTML += `<li><h2>User: ${friend.Username}</h2></li>
+        //                             <li>ID: ${friend.ID}</li><br>
+        //                             <li>Password: ${friend.Password}</li><br>
+        //                             <li>Role: ${friend.Role}</li><br><br>`
+        //         listFriends.appendChild(ulUser)
+        //     }
+        //     document.getElementById("body").appendChild(listFriends)
+        //
+        //     btnIndex.addEventListener("click", backToIndex)
+        //
+        // } else if (this.status === 400) {
+        //     console.log(localStorage.getItem("token"))
+        //     btnUserFriends.remove();
+        //     login();
+        // };
 
     };
 
     xhttpUserFriends.open("GET", "/api/v1/user/friends", true)
-    xhttpUserFriends.setRequestHeader("Authorization", tokenString)
+    xhttpUserFriends.setRequestHeader("Authorization", localStorage.getItem("token"))
     xhttpUserFriends.send();
+}
+
+function getStatus(readyState, status) {
+
+    const promise = new Promise(function (resolve, reject) {
+        if (readyState === 4 && status === 200) {
+            resolve()
+        } else if (status === 400) {
+            reject()
+        }
+    })
+    return promise
 }
 
 function login() {
@@ -76,13 +119,8 @@ function login() {
         const password = document.getElementById("password");
 
         let User = {
-            ID: "",
             Username: username.value,
-            Password: password.value,
-            Role: "",
-            Deadline: "",
-            Token: "",
-            Friends: []
+            Password: password.value
         };
 
         const xhttpLogin = new XMLHttpRequest();
@@ -91,8 +129,7 @@ function login() {
 
             if (this.readyState === 4 && this.status === 200) {
                 let token = JSON.parse(this.responseText);
-                tokenString = token.Content;
-                console.log(tokenString);
+                localStorage.setItem("token", token.Content);
                 userFriends();
             };
 
