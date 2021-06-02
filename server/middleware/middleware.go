@@ -3,6 +3,7 @@ package middleware
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"time"
 
@@ -15,7 +16,7 @@ func GetUserFromBody(c *gin.Context) {
 
 	var user database.User
 
-	err := json.NewDecoder(c.Request.Body).Decode(&user)
+	d, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"ErrMessage": "Internal Error",
@@ -23,7 +24,17 @@ func GetUserFromBody(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(user)
+	fmt.Printf("%s\n", d)
+
+	err = json.NewDecoder(c.Request.Body).Decode(&user)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
+		return
+	}
+
+	fmt.Println("Usuario", user)
 
 	c.Set("user-data", &user)
 	c.Next()
