@@ -35,7 +35,6 @@ func SignIn(c *gin.Context) {
 	}
 
 	token := database.Token{Content: user.Token}
-
 	c.JSON(http.StatusOK, token)
 
 }

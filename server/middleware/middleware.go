@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"time"
 
@@ -17,19 +16,7 @@ func GetUserFromBody(c *gin.Context) {
 
 	var user database.User
 
-	d, err := ioutil.ReadAll(c.Request.Body)
-	if err != nil {
-		if err != io.EOF {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"ErrMessage": "Internal Error",
-			})
-			return
-		}
-	}
-
-	fmt.Printf("%s\n", d)
-
-	err = json.NewDecoder(c.Request.Body).Decode(&user)
+	err := json.NewDecoder(c.Request.Body).Decode(&user)
 	if err != nil {
 		if err != io.EOF {
 
