@@ -222,8 +222,8 @@ function friendPosts() {
     body.appendChild(form);
 
     let btnSubmit = document.getElementById("btn-submit");
-
     btnSubmit.addEventListener("click", (e) => {
+        e.preventDefault();
 
         const friendUsername = document.getElementById("friendUsername");
 
@@ -232,10 +232,12 @@ function friendPosts() {
         xhttpFriendPosts.onreadystatechange = function () {
 
             if (this.readyState === 4 && this.status === 200) {
-                let token = JSON.parse(this.responseText);
-                localStorage.setItem("token", token.Content);
-                backToIndex();
+                let friendPosts = JSON.parse(this.responseText);
+
+                console.log(friendPosts)
+
             } else {
+                console.log("error dom")
                 form.remove()
                 let btnIndex = document.getElementById("btn-index")
                 btnIndex.textContent = "Back To Index"
@@ -243,13 +245,11 @@ function friendPosts() {
                 title.textContent = "Error: The Username Entered Does Not Belong To One Of Your Friends"
             }
 
-
-            xhttpFriendPosts.setRequestHeader("Authorization", localStorage.getItem("token"))
-            xhttpFriendPosts.open("POST", `/api/v1/friend/${friendUsername}/posts`, true);
-            xhttpFriendPosts.send();
         };
-        e.preventDefault();
-
+        console.log(xhttpFriendPosts)
+        xhttpFriendPosts.setRequestHeader("Authorization", localStorage.getItem("token"))
+        xhttpFriendPosts.open("GET", "/api/v1/friend/arthuronavah/posts", true);
+        xhttpFriendPosts.send();
     })// api / v1 / friend / arthuronavah / posts
 }
 
