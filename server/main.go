@@ -63,7 +63,7 @@ func main() {
 			sGetUserFromToken.PUT("/user", handler.UpdateUser)
 			sGetUserFromToken.GET("/user/posts", handler.GetPostsFromUser)
 			sGetUserFromToken.GET("/user/friends", handler.GetFriendsFromUser)
-			sGetUserFromToken.GET("/friend/:username/posts", handler.GetPostsOfFriend)
+			sGetUserFromToken.POST("/friend/:username/posts", handler.GetPostsOfFriend)
 			sGetUserFromToken.GET("/friends/posts", handler.GetPostsFromFriends)
 		}
 	}

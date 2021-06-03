@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Peticion 1: Mostrar Todos Los Usuario
+#Peticion 1: Mostrar Todos Los Usuarios
 curl -X GET http://localhost:8080/api/v1/users
 
 #Peticion 2: Mostrar Todos Los Amigos De Un Usuario

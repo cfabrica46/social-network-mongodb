@@ -1,7 +1,7 @@
 function traerDatos() {
-    const xhttp = new XMLHttpRequest();
+    const xhttpUsers = new XMLHttpRequest();
 
-    xhttp.onreadystatechange = function () {
+    xhttpUsers.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             let users = JSON.parse(this.responseText)
 
@@ -29,9 +29,9 @@ function traerDatos() {
 
         }
     }
-    xhttp.open("GET", "/api/v1/users", true);
+    xhttpUsers.open("GET", "/api/v1/users", true);
 
-    xhttp.send();
+    xhttpUsers.send();
 };
 
 traerDatos();
