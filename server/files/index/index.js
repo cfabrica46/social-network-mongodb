@@ -120,6 +120,9 @@ function friendsPosts() {
         nav.remove()
     }
 
+    let title = document.getElementById("title")
+    title.textContent = "Your Friends' Posts"
+
     let btnIndex = document.getElementById("btn-index")
     btnIndex.textContent = "Back To Index"
     btnIndex.addEventListener("click", backToIndex)
@@ -142,7 +145,6 @@ function friendsPosts() {
 
             document.getElementById("title").textContent = "Error: Necesita autenticarse"
 
-
         };
     }
     xhttpFriendsPosts.open("GET", "/api/v1/friends/posts", true);
@@ -159,6 +161,9 @@ function users() {
     if (nav != null) {
         nav.remove()
     }
+
+    let title = document.getElementById("title")
+    title.textContent = "All Users"
 
     let btnIndex = document.getElementById("btn-index")
     btnIndex.textContent = "Back To Index"
@@ -225,7 +230,7 @@ function friendPosts() {
     btnSubmit.addEventListener("click", (e) => {
         e.preventDefault();
 
-        const friendUsername = document.getElementById("friendUsername");
+        const friendUsername = document.getElementById("friendUsername").value;
 
         const xhttpFriendPosts = new XMLHttpRequest();
 
@@ -234,10 +239,20 @@ function friendPosts() {
             if (this.readyState === 4 && this.status === 200) {
                 let friendPosts = JSON.parse(this.responseText);
 
-                console.log(friendPosts)
+                let title = document.getElementById("title")
+                title.textContent = `${friendUsername}'s Posts`
+                console.log(friendPosts.Posts)
+                for (friendPost of friendPosts.Posts) {
+                    const ulFriendPosts = document.createElement("ul")
+                    ulFriendPosts.innerHTML += `<li><h3>ID: ${friendPost.ID}</h3></li>
+                                    <li>Content: ${friendPost.Content}</li><br>
+                                    <li>Date: ${friendPost.Date}</li><br>`
+                    document.getElementById("body").appendChild(ulFriendPosts)
+
+                }
+
 
             } else {
-                console.log("error dom")
                 form.remove()
                 let btnIndex = document.getElementById("btn-index")
                 btnIndex.textContent = "Back To Index"
@@ -246,11 +261,10 @@ function friendPosts() {
             }
 
         };
-        console.log(xhttpFriendPosts)
+        xhttpFriendPosts.open("GET", `/api/v1/friend/${friendUsername}/posts`, true);
         xhttpFriendPosts.setRequestHeader("Authorization", localStorage.getItem("token"))
-        xhttpFriendPosts.open("GET", "/api/v1/friend/arthuronavah/posts", true);
         xhttpFriendPosts.send();
-    })// api / v1 / friend / arthuronavah / posts
+    })
 }
 
 function login() {
