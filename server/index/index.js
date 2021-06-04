@@ -42,16 +42,19 @@ function users() {
 
             for (user of users) {
                 const ulUser = document.createElement("ul")
+                ulUser.classList.add("list-principal")
                 ulUser.innerHTML += `<li><h2>User: ${user.User.Username}</h2></li>
-                                    <li>ID: ${user.User.ID}</li><br>
-                                    <li>Role: ${user.User.Role}</li>
-                                    <li><h3>Posts: </h3></li>`
+                                    <li><h3>ID: ${user.User.ID}</h3></li>
+                                    <li><h3>Role: ${user.User.Role}</h3></li>
+                                    <li class="list-principal__post-label"><h3>Posts: </h3></li>`
 
                 const ulPost = document.createElement("ul")
+                ulPost.classList.add("list-principal__list-secundary")
                 for (post of user.Posts) {
-                    ulPost.innerHTML += `<ul>
+                    ulPost.innerHTML += `<ul class="list-principal__list-aux">
                                             <li><h4>ID: ${post.ID}</h4></li>
-                                            <li>Content: ${post.Content}</li><br><br>
+                                            <li>Content: ${post.Content}</li>
+                                            <li>Date: ${post.Date}</li>
                                         </ul>`
                 }
                 ulUser.appendChild(ulPost)
@@ -87,13 +90,16 @@ function userPosts() {
 
             let main = document.getElementById("main")
 
-
             let listPost = document.createElement("ul")
 
             for (post of posts) {
                 const ulUser = document.createElement("ul")
-                ulUser.innerHTML += `<li><h2>ID: ${post.ID}</h2></li>
-                                     <li>Content: ${post.Content}</li><br>`
+                ulUser.classList.add("list-principal")
+
+                ulUser.innerHTML += `<li><h3>ID: ${post.ID}</h3></li>
+                                     <li>Content: ${post.Content}</li>
+                                     <li>Date: ${post.Date}</li>`
+
                 listPost.appendChild(ulUser)
             }
             main.appendChild(listPost)
@@ -137,10 +143,10 @@ function userFriends() {
 
             for (friend of friends) {
                 const ulUser = document.createElement("ul")
+                ulUser.classList.add("list-principal")
                 ulUser.innerHTML += `<li><h2>User: ${friend.Username}</h2></li>
-                                     <li>ID: ${friend.ID}</li><br>
-                                     <li>Password: ${friend.Password}</li><br>
-                                     <li>Role: ${friend.Role}</li><br><br>`
+                                     <li>ID: ${friend.ID}</li>
+                                     <li>Role: ${friend.Role}</li>`
                 listFriends.appendChild(ulUser)
             }
             main.appendChild(listFriends)
@@ -205,9 +211,10 @@ function friendPosts() {
                 title.textContent = `${friendUsername}'s Posts`
                 for (friendPost of friendPosts.Posts) {
                     const ulFriendPosts = document.createElement("ul")
+                    ulFriendPosts.classList.add("list-principal")
                     ulFriendPosts.innerHTML += `<li><h3>ID: ${friendPost.ID}</h3></li>
-                                    <li>Content: ${friendPost.Content}</li><br>
-                                    <li>Date: ${friendPost.Date}</li><br>`
+                                    <li>Content: ${friendPost.Content}</li>
+                                    <li>Date: ${friendPost.Date}</li>`
                     main.appendChild(ulFriendPosts)
 
                 }
@@ -251,10 +258,14 @@ function friendsPosts() {
 
             for (friendPost of friendsPosts) {
                 const ulfriendPost = document.createElement("ul")
+                ulfriendPost.classList.add("list-principal")
                 ulfriendPost.innerHTML += `<li><h2>Author: ${friendPost.Author}</h2></li>
-                                    <li>Post: ${friendPost.Post}</li><br>
-                                    <li>Date: ${friendPost.Date}</li><br>`
-
+                                    <li class="list-principal__post-label"><h3>Posts: </h3></li>
+                                    <ul class="list-principal__list-aux">
+                                        <li><h3>ID: ${friendPost.Post.ID}</h3></li>
+                                        <li>Content: ${friendPost.Post.Content}</li>
+                                        <li>Date: ${friendPost.Post.Date}</li>
+                                    </ul>`
                 main.appendChild(ulfriendPost)
 
             }

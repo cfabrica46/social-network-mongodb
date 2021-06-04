@@ -10,31 +10,34 @@
     color: $mainColor;
 }
 
-.title {
-    font-family: "Hoefler Text", Georgia, "Times New Roman", serif;
-    font-weight: normal;
-    font-size: 3em;
-    letter-spacing: 0.2em;
-    line-height: 1.1em;
-    margin: 0px;
-    text-align: center;
-    text-transform: uppercase;
-}
+.header {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 
-.btn-index {
-    top: 60px;
-    left: 100px;
-    display: inline-block;
-    position: relative;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    .btn-index__img {
-        height: 40px;
-        transition: 0.2s;
+    .btn-index {
+        top: 60px;
+        left: 100px;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        .btn-index__img {
+            height: 40px;
+            transition: 0.2s;
+        }
+        .btn-index__img:hover {
+            opacity: 0.8;
+        }
     }
-    .btn-index__img:hover {
-        opacity: 0.8;
+
+    .title {
+        font-family: "Hoefler Text", Georgia, "Times New Roman", serif;
+        font-weight: normal;
+        font-size: 3em;
+        letter-spacing: 0.2em;
+        line-height: 1.1em;
+        margin: 0px;
+        text-align: center;
+        text-transform: uppercase;
     }
 }
 
@@ -65,11 +68,45 @@
 
 .main {
     padding: 10px 100px;
+    .list-principal {
+        margin: 70px;
+        padding: 30px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        justify-items: center;
+        align-items: center;
+        border: 3px solid $auxColor;
+        list-style-type: none;
+        font-size: 1.5em;
+
+        .list-principal__post-label {
+            text-align: center;
+            width: 100%;
+            grid-column: 1/4;
+            border-top: 2px solid $auxColor;
+            border-bottom: 2px solid $auxColor;
+        }
+
+        .list-principal__list-secundary {
+            justify-self: stretch;
+            grid-column: 1/4;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .list-principal__list-aux {
+            grid-column: 1/4;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            align-items: center;
+            justify-items: center;
+            list-style-type: none;
+        }
+    }
 }
 
 .form {
     width: 300px;
-    height: 400px;
     padding: 20px;
     position: absolute;
     top: 50%;

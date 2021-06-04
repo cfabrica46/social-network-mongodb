@@ -29,7 +29,10 @@ func GetPostsFromUser(id primitive.ObjectID) (posts []Post, err error) {
 	return
 }
 
-func GetPostsFromIDsFriends(ids []primitive.ObjectID) (friendsPosts []struct{ Post, Date, Author string }, err error) {
+func GetPostsFromIDsFriends(ids []primitive.ObjectID) (friendsPosts []struct {
+	Author string
+	Post   Post
+}, err error) {
 
 	for i := range ids {
 		var postAux Post
@@ -54,8 +57,9 @@ func GetPostsFromIDsFriends(ids []primitive.ObjectID) (friendsPosts []struct{ Po
 			}
 
 			friendPost := struct {
-				Post, Date, Author string
-			}{postAux.Content, postAux.Date, userAux.Username}
+				Author string
+				Post   Post
+			}{userAux.Username, postAux}
 
 			friendsPosts = append(friendsPosts, friendPost)
 
@@ -70,7 +74,10 @@ func GetPostsFromIDsFriends(ids []primitive.ObjectID) (friendsPosts []struct{ Po
 	return
 }
 
-func ordenarStructFriendsPosts(friendsPosts []struct{ Post, Date, Author string }) (err error) {
+func ordenarStructFriendsPosts(friendsPosts []struct {
+	Author string
+	Post   Post
+}) (err error) {
 
 	for indx := 0; indx < len(friendsPosts)-1; indx++ {
 
@@ -78,12 +85,12 @@ func ordenarStructFriendsPosts(friendsPosts []struct{ Post, Date, Author string 
 
 			var t1, t2 time.Time
 
-			t1, err = time.Parse(time.Stamp, (friendsPosts)[i].Date)
+			t1, err = time.Parse(time.Stamp, (friendsPosts)[i].Post.Date)
 			if err != nil {
 				return
 			}
 
-			t2, err = time.Parse(time.Stamp, (friendsPosts)[i+1].Date)
+			t2, err = time.Parse(time.Stamp, (friendsPosts)[i+1].Post.Date)
 			if err != nil {
 				return
 			}
