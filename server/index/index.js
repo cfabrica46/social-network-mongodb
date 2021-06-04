@@ -7,6 +7,7 @@ let btnUserFriends = document.getElementById("btn-User-Friends")
 let btnFriendPosts = document.getElementById("btn-Friend-Posts")
 let btnFriendsPosts = document.getElementById("btn-Friends-Posts")
 let btnSignIn = document.getElementById("btn-SignIn")
+let btnLogOut = document.getElementById("btn-LogOut");
 let btnIndex = document.getElementById("btn-index")
 
 localStorage.removeItem("token")
@@ -17,6 +18,7 @@ btnUserFriends.addEventListener("click", userFriends);
 btnFriendPosts.addEventListener("click", friendPosts)
 btnFriendsPosts.addEventListener("click", friendsPosts);
 btnSignIn.addEventListener("click", login);
+btnLogOut.addEventListener("click", logout)
 btnIndex.addEventListener("click", backToIndex)
 
 function users() {
@@ -341,21 +343,44 @@ function login() {
 
 }
 
+function logout() {
+    const xhttpLogout = new XMLHttpRequest();
+    xhttpLogout.onreadystatechange = function () {
+
+        if (this.readyState === 4 && this.status === 200) {
+            userUsername = ""
+            localStorage.removeItem("token")
+            backToIndex();
+        } else {
+            backToIndex();
+        }
+
+    }
+
+    xhttpLogout.open("GET", `/api/v1/logout`, true);
+    xhttpLogout.setRequestHeader("Authorization", localStorage.getItem("token"))
+    xhttpLogout.send();
+}
+
 function backToIndex() {
 
     let body = document.body;
     body.innerHTML = originBody
 
-    if (userUsername != undefined) {
+    if (userUsername == undefined || userUsername == "") {
+        document.getElementById("title").textContent = `Index`
+    } else {
         document.getElementById("title").textContent = `${userUsername}'s Profile`
     }
 
-    let btnUserFriends = document.getElementById("btn-User-Friends")
-    let btnUserPosts = document.getElementById("btn-User-Posts")
-    let btnFriendsPosts = document.getElementById("btn-Friends-Posts")
-    let btnUsers = document.getElementById("btn-Users")
-    let btnFriendPosts = document.getElementById("btn-Friend-Posts")
-    let btnSignIn = document.getElementById("btn-SignIn")
+    let btnUserFriends = document.getElementById("btn-User-Friends");
+    let btnUserPosts = document.getElementById("btn-User-Posts");
+    let btnFriendsPosts = document.getElementById("btn-Friends-Posts");
+    let btnUsers = document.getElementById("btn-Users");
+    let btnFriendPosts = document.getElementById("btn-Friend-Posts");
+    let btnSignIn = document.getElementById("btn-SignIn");
+    let btnLogOut = document.getElementById("btn-LogOut");
+    let btnIndex = document.getElementById("btn-index");
 
     btnUserFriends.addEventListener("click", userFriends);
     btnUserPosts.addEventListener("click", userPosts);
@@ -363,5 +388,7 @@ function backToIndex() {
     btnUsers.addEventListener("click", users)
     btnFriendPosts.addEventListener("click", friendPosts)
     btnSignIn.addEventListener("click", login);
+    btnLogOut.addEventListener("click", logout)
+    btnIndex.addEventListener("click", backToIndex)
 
 }

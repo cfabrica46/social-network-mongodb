@@ -43,7 +43,7 @@
 
 .nav {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     position: relative;
     top: 50px;
     height: 80px;
@@ -61,7 +61,7 @@
         background-color: white;
         color: $mainColor;
     }
-    .nav__btn--index {
+    .nav__btn--special {
         background-color: $auxColor;
     }
 }
