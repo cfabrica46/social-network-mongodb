@@ -1,4 +1,5 @@
-var originBody = document.getElementById("body").innerHTML
+var originBody = document.body.innerHTML
+var userUsername;
 
 let btnUserFriends = document.getElementById("btn-User-Friends")
 let btnUserPosts = document.getElementById("btn-User-Posts")
@@ -6,14 +7,17 @@ let btnFriendsPosts = document.getElementById("btn-Friends-Posts")
 let btnUsers = document.getElementById("btn-Users")
 let btnFriendPosts = document.getElementById("btn-Friend-Posts")
 let btnSignIn = document.getElementById("btn-SignIn")
+let btnIndex = document.getElementById("btn-index")
 
 localStorage.removeItem("token")
+
 btnUserFriends.addEventListener("click", userFriends);
 btnUserPosts.addEventListener("click", userPosts);
 btnFriendsPosts.addEventListener("click", friendsPosts);
 btnUsers.addEventListener("click", users)
 btnFriendPosts.addEventListener("click", friendPosts)
 btnSignIn.addEventListener("click", login);
+btnIndex.addEventListener("click", backToIndex)
 
 function userFriends() {
     const xhttpUserFriends = new XMLHttpRequest();
@@ -24,20 +28,18 @@ function userFriends() {
     }
 
     let btnIndex = document.getElementById("btn-index")
-    btnIndex.textContent = "Back To Index"
     btnIndex.addEventListener("click", backToIndex)
 
     xhttpUserFriends.onreadystatechange = function () {
 
         if (this.readyState === 4 && this.status === 200) {
-            console.log(localStorage.getItem("token"))
 
             let title = document.getElementById("title")
             let friends = JSON.parse(this.responseText)
 
             title.textContent = "Your Friends"
 
-            console.log(friends)
+            let main = document.getElementById("main")
 
             let listFriends = document.createElement("ul")
 
@@ -49,7 +51,7 @@ function userFriends() {
                                      <li>Role: ${friend.Role}</li><br><br>`
                 listFriends.appendChild(ulUser)
             }
-            document.getElementById("body").appendChild(listFriends)
+            main.appendChild(listFriends)
 
 
         } else if (this.status === 400) {
@@ -73,20 +75,19 @@ function userPosts() {
     }
 
     let btnIndex = document.getElementById("btn-index")
-    btnIndex.textContent = "Back To Index"
     btnIndex.addEventListener("click", backToIndex)
 
     xhttpUserPosts.onreadystatechange = function () {
 
         if (this.readyState === 4 && this.status === 200) {
-            console.log(localStorage.getItem("token"))
 
             let title = document.getElementById("title")
             let posts = JSON.parse(this.responseText)
 
             title.textContent = "Your Posts"
 
-            console.log(posts)
+            let main = document.getElementById("main")
+
 
             let listPost = document.createElement("ul")
 
@@ -96,7 +97,7 @@ function userPosts() {
                                      <li>Content: ${post.Content}</li><br>`
                 listPost.appendChild(ulUser)
             }
-            document.getElementById("body").appendChild(listPost)
+            main.appendChild(listPost)
 
 
         } else if (this.status === 400) {
@@ -120,16 +121,18 @@ function friendsPosts() {
         nav.remove()
     }
 
+    let btnIndex = document.getElementById("btn-index")
+    btnIndex.addEventListener("click", backToIndex)
+
     let title = document.getElementById("title")
     title.textContent = "Your Friends' Posts"
-
-    let btnIndex = document.getElementById("btn-index")
-    btnIndex.textContent = "Back To Index"
-    btnIndex.addEventListener("click", backToIndex)
 
     xhttpFriendsPosts.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             let friendsPosts = JSON.parse(this.responseText)
+
+            let main = document.getElementById("main")
+
 
             for (friendPost of friendsPosts) {
                 const ulfriendPost = document.createElement("ul")
@@ -137,7 +140,7 @@ function friendsPosts() {
                                     <li>Post: ${friendPost.Post}</li><br>
                                     <li>Date: ${friendPost.Date}</li><br>`
 
-                document.getElementById("body").appendChild(ulfriendPost)
+                main.appendChild(ulfriendPost)
 
             }
 
@@ -162,16 +165,17 @@ function users() {
         nav.remove()
     }
 
+    let btnIndex = document.getElementById("btn-index")
+    btnIndex.addEventListener("click", backToIndex)
+
     let title = document.getElementById("title")
     title.textContent = "All Users"
-
-    let btnIndex = document.getElementById("btn-index")
-    btnIndex.textContent = "Back To Index"
-    btnIndex.addEventListener("click", backToIndex)
 
     xhttpUsers.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             let users = JSON.parse(this.responseText)
+
+            let main = document.getElementById("main")
 
             for (user of users) {
                 const ulUser = document.createElement("ul")
@@ -182,7 +186,6 @@ function users() {
 
                 const ulPost = document.createElement("ul")
                 for (post of user.Posts) {
-                    console.log(post)
                     ulPost.innerHTML += `<ul>
                                             <li><h4>ID: ${post.ID}</h4></li>
                                             <li>Content: ${post.Content}</li><br><br>
@@ -190,7 +193,7 @@ function users() {
                 }
                 ulUser.appendChild(ulPost)
 
-                document.getElementById("body").appendChild(ulUser)
+                main.appendChild(ulUser)
             }
 
         }
@@ -201,28 +204,27 @@ function users() {
 
 function friendPosts() {
 
-    let body = document.getElementById("body");
+    let body = document.body;
     document.getElementById("title").textContent = "Enter your friend's username";
     let nav = document.getElementById("nav")
     if (nav != null) {
         nav.remove()
     }
 
+    let btnIndex = document.getElementById("btn-index")
+    btnIndex.addEventListener("click", backToIndex)
+
     if (localStorage.getItem("token") === null) {
         document.getElementById("title").textContent = "Error: Necesita autenticarse"
-
-        let btnIndex = document.getElementById("btn-index")
-        btnIndex.textContent = "Back To Index"
-        btnIndex.addEventListener("click", backToIndex)
-        return
     }
 
     let form = document.createElement("form");
 
     form.id = "form"
+    form.classList.add("form")
 
-    form.innerHTML += `Friend's Username: <input id="friendUsername" type="text" name="friendUsername"><br><br>
-                        <button id="btn-submit">Submit</button>`;
+    form.innerHTML += `Friend's Username: <input id="friendUsername" class="form__input-text" type="text" name="friendUsername"><br><br>
+                        <button id="btn-submit" class="form__submit">Submit</button>`;
 
     body.appendChild(form);
 
@@ -236,27 +238,26 @@ function friendPosts() {
 
         xhttpFriendPosts.onreadystatechange = function () {
 
+            let main = document.getElementById("main")
+
+
             if (this.readyState === 4 && this.status === 200) {
                 let friendPosts = JSON.parse(this.responseText);
 
                 let title = document.getElementById("title")
                 title.textContent = `${friendUsername}'s Posts`
-                console.log(friendPosts.Posts)
                 for (friendPost of friendPosts.Posts) {
                     const ulFriendPosts = document.createElement("ul")
                     ulFriendPosts.innerHTML += `<li><h3>ID: ${friendPost.ID}</h3></li>
                                     <li>Content: ${friendPost.Content}</li><br>
                                     <li>Date: ${friendPost.Date}</li><br>`
-                    document.getElementById("body").appendChild(ulFriendPosts)
+                    main.appendChild(ulFriendPosts)
 
                 }
 
 
             } else {
                 form.remove()
-                let btnIndex = document.getElementById("btn-index")
-                btnIndex.textContent = "Back To Index"
-                btnIndex.addEventListener("click", backToIndex)
                 title.textContent = "Error: The Username Entered Does Not Belong To One Of Your Friends"
             }
 
@@ -269,10 +270,13 @@ function friendPosts() {
 
 function login() {
 
-    let body = document.getElementById("body");
+    let body = document.body;
     let title = document.getElementById("title");
     title.textContent = "Join Your Data";
     let form = document.createElement("form");
+
+    let btnIndex = document.getElementById("btn-index")
+    btnIndex.addEventListener("click", backToIndex)
 
     let nav = document.getElementById("nav")
     if (nav != null) {
@@ -280,10 +284,11 @@ function login() {
     }
 
     form.id = "form"
+    form.classList.add("form")
 
-    form.innerHTML += `Username: <input id="username" type="text" name="username"><br><br>
-                    Password: <input id="password" type="password" name="password"><br><br>
-                        <button id="btn-submit">Submit</button>`;
+    form.innerHTML += `Username: <input id="username" class="form__input-text" type="text" name="username"><br><br>
+                    Password: <input id="password" class="form__input-text" type="password" name="password"><br><br>
+                        <button id="btn-submit" class="form__submit">Submit</button>`;
 
     body.appendChild(form);
 
@@ -306,13 +311,11 @@ function login() {
 
             if (this.readyState === 4 && this.status === 200) {
                 let token = JSON.parse(this.responseText);
+                userUsername = username.value;
                 localStorage.setItem("token", token.Content);
                 backToIndex();
             } else {
                 form.remove()
-                let btnIndex = document.getElementById("btn-index")
-                btnIndex.textContent = "Back To Index"
-                btnIndex.addEventListener("click", backToIndex)
                 title.textContent = "Error: Username and/or Password Invalid"
             }
 
@@ -326,8 +329,12 @@ function login() {
 
 function backToIndex() {
 
-    let body = document.getElementById("body")
+    let body = document.body;
     body.innerHTML = originBody
+
+    if (userUsername != undefined) {
+        document.getElementById("title").textContent = `${userUsername}'s Profile`
+    }
 
     let btnUserFriends = document.getElementById("btn-User-Friends")
     let btnUserPosts = document.getElementById("btn-User-Posts")

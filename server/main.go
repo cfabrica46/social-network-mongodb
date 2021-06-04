@@ -41,7 +41,7 @@ func main() {
 
 	r := gin.Default()
 
-	r.StaticFS("/files", http.Dir("files"))
+	r.StaticFS("/index", http.Dir("index"))
 
 	s := r.Group("/api/v1")
 	{

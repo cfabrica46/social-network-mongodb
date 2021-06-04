@@ -1,0 +1,112 @@
+@import "variables";
+
+.body {
+    background-color: $backgroundAuxColor;
+    background-image: linear-gradient($backgroundColor, 1.6px, transparent 1.6px),
+        linear-gradient(to right, $backgroundColor 1.6px, $backgroundAuxColor 1.6px);
+    background-size: 32px 32px;
+    margin: 0;
+    padding: 20px 0px;
+    color: $mainColor;
+}
+
+.title {
+    font-family: "Hoefler Text", Georgia, "Times New Roman", serif;
+    font-weight: normal;
+    font-size: 4em;
+    letter-spacing: 0.2em;
+    line-height: 1.1em;
+    margin: 0px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.btn-index {
+    top: 60px;
+    left: 100px;
+    display: inline-block;
+    position: relative;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    .btn-index__img {
+        height: 40px;
+        transition: 0.2s;
+    }
+    .btn-index__img:hover {
+        opacity: 0.8;
+    }
+}
+
+.nav {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    position: relative;
+    top: 50px;
+    height: 80px;
+    background-color: $mainColor;
+    .nav__btn {
+        cursor: pointer;
+        border: none;
+        background-color: transparent;
+        font-family: "Hoefler Text", Georgia, "Times New Roman", serif;
+        font-size: 1.2em;
+        color: white;
+        transition: 0.4s;
+    }
+    .nav__btn:hover {
+        background-color: white;
+        color: $mainColor;
+    }
+    .nav__btn--index {
+        background-color: $auxColor;
+    }
+}
+
+.main {
+    padding: 10px 100px;
+}
+
+.form {
+    width: 300px;
+    height: 400px;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: $auxColor;
+    text-align: center;
+    border-radius: 22px;
+    color: white;
+    font-size: 2em;
+
+    .form__input-text {
+        font-size: 0.5em;
+        border: 0;
+        background: none;
+        display: block;
+        margin: 5px auto;
+        text-align: center;
+        border: 2px solid white;
+        padding: 14px 10px;
+        width: 200px;
+        outline: none;
+        color: white;
+        border-radius: 22px;
+    }
+
+    .form__submit {
+        border: 0;
+        background: none;
+        display: block;
+        margin: 5px auto;
+        text-align: center;
+        border: 2px solid white;
+        padding: 14px 40px;
+        outline: none;
+        color: white;
+        border-radius: 22px;
+        cursor: pointer;
+    }
+}
