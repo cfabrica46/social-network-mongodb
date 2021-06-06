@@ -1,0 +1,32 @@
+.nav {
+    display: flex;
+    flex-direction: column;
+
+    @media only screen and (min-width: $small) {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        height: 80px;
+    }
+
+    position: relative;
+    top: 50px;
+    background-color: $mainColor;
+    .nav__btn {
+        padding: 5px 0;
+
+        cursor: pointer;
+        border: none;
+        background-color: transparent;
+        font-family: "Hoefler Text", Georgia, "Times New Roman", serif;
+        font-size: 1.2em;
+        color: white;
+        transition: 0.4s;
+    }
+    .nav__btn:hover {
+        background-color: white;
+        color: $mainColor;
+    }
+    .nav__btn--special {
+        background-color: $auxColor;
+    }
+}

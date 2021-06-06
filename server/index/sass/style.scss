@@ -1,83 +1,42 @@
 @import "variables";
 
-.body {
-    background-color: $backgroundAuxColor;
-    background-image: linear-gradient($backgroundColor, 1.6px, transparent 1.6px),
-        linear-gradient(to right, $backgroundColor 1.6px, $backgroundAuxColor 1.6px);
-    background-size: 32px 32px;
-    margin: 0;
-    padding: 20px 0px;
-    color: $mainColor;
-}
+@import "body";
 
-.header {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+@import "header";
 
-    .btn-index {
-        top: 60px;
-        left: 100px;
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
-        .btn-index__img {
-            height: 40px;
-            transition: 0.2s;
-        }
-        .btn-index__img:hover {
-            opacity: 0.8;
-        }
-    }
-
-    .title {
-        font-family: "Hoefler Text", Georgia, "Times New Roman", serif;
-        font-weight: normal;
-        font-size: 3em;
-        letter-spacing: 0.2em;
-        line-height: 1.1em;
-        margin: 0px;
-        text-align: center;
-        text-transform: uppercase;
-    }
-}
-
-.nav {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    position: relative;
-    top: 50px;
-    height: 80px;
-    background-color: $mainColor;
-    .nav__btn {
-        cursor: pointer;
-        border: none;
-        background-color: transparent;
-        font-family: "Hoefler Text", Georgia, "Times New Roman", serif;
-        font-size: 1.2em;
-        color: white;
-        transition: 0.4s;
-    }
-    .nav__btn:hover {
-        background-color: white;
-        color: $mainColor;
-    }
-    .nav__btn--special {
-        background-color: $auxColor;
-    }
-}
+@import "nav";
 
 .main {
-    padding: 10px 100px;
+    padding: 10px 0px;
+    @media only screen and (min-width: $large) {
+        padding: 10px 50px;
+    }
+    @media only screen and (min-width: $xlarge) {
+        padding: 10px 100px;
+    }
     .list-principal {
-        margin: 70px;
-        padding: 30px;
+        margin: 50px;
+        padding: 20px;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         justify-items: center;
         align-items: center;
         border: 3px solid $auxColor;
         list-style-type: none;
-        font-size: 1.5em;
+        font-size: 0.6em;
+
+        @media only screen and (min-width: $small) {
+            font-size: 0.8em;
+        }
+
+        @media only screen and (min-width: $medium) {
+            font-size: 1.2em;
+        }
+
+        @media only screen and (min-width: $large) {
+            margin: 70px;
+            font-size: 1.5em;
+        }
 
         .list-principal__post-label {
             text-align: center;
@@ -88,19 +47,26 @@
         }
 
         .list-principal__list-secundary {
+            justify-content: space-between;
             justify-self: stretch;
             grid-column: 1/4;
             display: flex;
             flex-direction: column;
+            padding: 0;
         }
 
         .list-principal__list-aux {
+            padding: 0;
             grid-column: 1/4;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             align-items: center;
             justify-items: center;
             list-style-type: none;
+
+            @media only screen and (min-width: $large) {
+                padding: 0px 50px;
+            }
         }
     }
 }

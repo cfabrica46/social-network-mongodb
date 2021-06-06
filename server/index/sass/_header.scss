@@ -1,0 +1,42 @@
+.header {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    .btn-index {
+        top: 60px;
+        left: 100px;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        .btn-index__img {
+            height: 30px;
+            transition: 0.2s;
+
+            @media only screen and (min-width: $medium) {
+                height: 40px;
+            }
+        }
+        .btn-index__img:hover {
+            opacity: 0.8;
+        }
+    }
+
+    .title {
+        font-family: "Hoefler Text", Georgia, "Times New Roman", serif;
+        font-weight: normal;
+        font-size: 1.8em;
+        letter-spacing: 0.2em;
+        line-height: 1.1em;
+        margin: 0px;
+        text-align: center;
+        text-transform: uppercase;
+
+        @media only screen and (min-width: $small) {
+            font-size: 2.5em;
+        }
+
+        @media only screen and (min-width: $large) {
+            font-size: 3em;
+        }
+    }
+}

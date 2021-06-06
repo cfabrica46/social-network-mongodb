@@ -357,7 +357,7 @@ function logout() {
 
     }
 
-    xhttpLogout.open("GET", `/api/v1/logout`, true);
+    xhttpLogout.open("GET", "/api/v1/logout", true);
     xhttpLogout.setRequestHeader("Authorization", localStorage.getItem("token"))
     xhttpLogout.send();
 }
@@ -368,7 +368,7 @@ function backToIndex() {
     body.innerHTML = originBody
 
     if (userUsername == undefined || userUsername == "") {
-        document.getElementById("title").textContent = `Index`
+        document.getElementById("title").textContent = "Index"
     } else {
         document.getElementById("title").textContent = `${userUsername}'s Profile`
     }

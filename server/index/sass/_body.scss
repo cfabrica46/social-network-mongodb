@@ -1,0 +1,9 @@
+.body {
+    background-color: $backgroundAuxColor;
+    background-image: linear-gradient($backgroundColor, 1.6px, transparent 1.6px),
+        linear-gradient(to right, $backgroundColor 1.6px, $backgroundAuxColor 1.6px);
+    background-size: 32px 32px;
+    margin: 0;
+    padding: 20px 0px;
+    color: $mainColor;
+}
