@@ -23,7 +23,7 @@ btnIndex.addEventListener("click", backToIndex)
 
 function users() {
 
-    const xhttpUsers = new XMLHttpRequest();
+    //    const xhttpUsers = new XMLHttpRequest();
 
     let nav = document.getElementById("nav")
     if (nav != null) {
@@ -36,9 +36,9 @@ function users() {
     let title = document.getElementById("title")
     title.textContent = "All Users"
 
-    xhttpUsers.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-            let users = JSON.parse(this.responseText)
+    fetch("/api/v1/users")
+        .then(responsive => responsive.json())
+        .then(users => {
 
             let main = document.getElementById("main")
 
@@ -46,28 +46,57 @@ function users() {
                 const ulUser = document.createElement("ul")
                 ulUser.classList.add("list-principal")
                 ulUser.innerHTML += `<li><h2>User: ${user.User.Username}</h2></li>
-                                    <li><h3>ID: ${user.User.ID}</h3></li>
-                                    <li><h3>Role: ${user.User.Role}</h3></li>
-                                    <li class="list-principal__post-label"><h3>Posts: </h3></li>`
+                                              <li><h3>ID: ${user.User.ID}</h3></li>
+                                              <li><h3>Role: ${user.User.Role}</h3></li>
+                                              <li class="list-principal__post-label"><h3>Posts: </h3></li>`
 
                 const ulPost = document.createElement("ul")
                 ulPost.classList.add("list-principal__list-secundary")
                 for (post of user.Posts) {
                     ulPost.innerHTML += `<ul class="list-principal__list-aux">
-                                            <li><h4>ID: ${post.ID}</h4></li>
-                                            <li>Content: ${post.Content}</li>
-                                            <li>Date: ${post.Date}</li>
-                                        </ul>`
+                                                          <li><h4>ID: ${post.ID}</h4></li>
+                                                          <li>Content: ${post.Content}</li>
+                                                          <li>Date: ${post.Date}</li>
+                                                      </ul>`
                 }
                 ulUser.appendChild(ulPost)
 
                 main.appendChild(ulUser)
             }
+        })
 
-        }
-    }
-    xhttpUsers.open("GET", "/api/v1/users", true);
-    xhttpUsers.send();
+    //    xhttpUsers.onreadystatechange = function () {
+    //        if (this.readyState === 4 && this.status === 200) {
+    //            let users = JSON.parse(this.responseText)
+    //
+    //            let main = document.getElementById("main")
+    //
+    //            for (user of users) {
+    //                const ulUser = document.createElement("ul")
+    //                ulUser.classList.add("list-principal")
+    //                ulUser.innerHTML += `<li><h2>User: ${user.User.Username}</h2></li>
+    //                                    <li><h3>ID: ${user.User.ID}</h3></li>
+    //                                    <li><h3>Role: ${user.User.Role}</h3></li>
+    //                                    <li class="list-principal__post-label"><h3>Posts: </h3></li>`
+    //
+    //                const ulPost = document.createElement("ul")
+    //                ulPost.classList.add("list-principal__list-secundary")
+    //                for (post of user.Posts) {
+    //                    ulPost.innerHTML += `<ul class="list-principal__list-aux">
+    //                                            <li><h4>ID: ${post.ID}</h4></li>
+    //                                            <li>Content: ${post.Content}</li>
+    //                                            <li>Date: ${post.Date}</li>
+    //                                        </ul>`
+    //                }
+    //                ulUser.appendChild(ulPost)
+    //
+    //                main.appendChild(ulUser)
+    //            }
+    //
+    //        }
+    //    }
+    //    xhttpUsers.open("GET", "/api/v1/users", true);
+    //    xhttpUsers.send();
 }
 
 function userPosts() {
