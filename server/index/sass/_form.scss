@@ -1,0 +1,42 @@
+.form {
+    width: 300px;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: $auxColor;
+    text-align: center;
+    border-radius: 22px;
+    color: white;
+    font-size: 2em;
+
+    .form__input-text {
+        font-size: 0.5em;
+        border: 0;
+        background: none;
+        display: block;
+        margin: 5px auto;
+        text-align: center;
+        border: 2px solid white;
+        padding: 14px 10px;
+        width: 200px;
+        outline: none;
+        color: white;
+        border-radius: 22px;
+    }
+
+    .form__submit {
+        border: 0;
+        background: none;
+        display: block;
+        margin: 5px auto;
+        text-align: center;
+        border: 2px solid white;
+        padding: 14px 40px;
+        outline: none;
+        color: white;
+        border-radius: 22px;
+        cursor: pointer;
+    }
+}

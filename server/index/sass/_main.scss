@@ -1,0 +1,76 @@
+.main {
+    padding: 10px 0px;
+    @media only screen and (min-width: $large) {
+        padding: 10px 50px;
+    }
+    @media only screen and (min-width: $xlarge) {
+        padding: 10px 100px;
+    }
+    .list-principal {
+        margin: 50px;
+        padding: 20px;
+
+        display: flex;
+        flex-direction: column;
+
+        border: 3px solid $auxColor;
+        list-style-type: none;
+        font-size: 0.6em;
+
+        align-items: center;
+
+        @media only screen and (min-width: $small) {
+            font-size: 0.8em;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            justify-items: center;
+        }
+
+        @media only screen and (min-width: $medium) {
+            font-size: 1.2em;
+        }
+
+        @media only screen and (min-width: $large) {
+            margin: 70px;
+            font-size: 1.5em;
+        }
+
+        .list-principal__post-label {
+            text-align: center;
+            width: 100%;
+            grid-column: 1/4;
+            border-top: 2px solid $auxColor;
+            border-bottom: 2px solid $auxColor;
+        }
+
+        .list-principal__list-secundary {
+            justify-content: space-between;
+            justify-self: stretch;
+            grid-column: 1/4;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .list-principal__list-aux {
+            padding: 0;
+            grid-column: 1/4;
+
+            display: flex;
+            flex-direction: column;
+
+            list-style-type: none;
+            align-items: center;
+
+            @media only screen and (min-width: $small) {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                justify-items: center;
+            }
+
+            @media only screen and (min-width: $large) {
+                padding: 0px 50px;
+            }
+        }
+    }
+}
