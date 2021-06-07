@@ -23,8 +23,6 @@ btnIndex.addEventListener("click", backToIndex)
 
 function users() {
 
-    //    const xhttpUsers = new XMLHttpRequest();
-
     let nav = document.getElementById("nav")
     if (nav != null) {
         nav.remove()
@@ -65,42 +63,9 @@ function users() {
             }
         })
 
-    //    xhttpUsers.onreadystatechange = function () {
-    //        if (this.readyState === 4 && this.status === 200) {
-    //            let users = JSON.parse(this.responseText)
-    //
-    //            let main = document.getElementById("main")
-    //
-    //            for (user of users) {
-    //                const ulUser = document.createElement("ul")
-    //                ulUser.classList.add("list-principal")
-    //                ulUser.innerHTML += `<li><h2>User: ${user.User.Username}</h2></li>
-    //                                    <li><h3>ID: ${user.User.ID}</h3></li>
-    //                                    <li><h3>Role: ${user.User.Role}</h3></li>
-    //                                    <li class="list-principal__post-label"><h3>Posts: </h3></li>`
-    //
-    //                const ulPost = document.createElement("ul")
-    //                ulPost.classList.add("list-principal__list-secundary")
-    //                for (post of user.Posts) {
-    //                    ulPost.innerHTML += `<ul class="list-principal__list-aux">
-    //                                            <li><h4>ID: ${post.ID}</h4></li>
-    //                                            <li>Content: ${post.Content}</li>
-    //                                            <li>Date: ${post.Date}</li>
-    //                                        </ul>`
-    //                }
-    //                ulUser.appendChild(ulPost)
-    //
-    //                main.appendChild(ulUser)
-    //            }
-    //
-    //        }
-    //    }
-    //    xhttpUsers.open("GET", "/api/v1/users", true);
-    //    xhttpUsers.send();
 }
 
 function userPosts() {
-    const xhttpUserPosts = new XMLHttpRequest();
 
     let nav = document.getElementById("nav")
     if (nav != null) {
@@ -110,12 +75,14 @@ function userPosts() {
     let btnIndex = document.getElementById("btn-index")
     btnIndex.addEventListener("click", backToIndex)
 
-    xhttpUserPosts.onreadystatechange = function () {
-
-        if (this.readyState === 4 && this.status === 200) {
-
+    fetch("/api/v1/user/posts", {
+        headers: {
+            "Authorization": localStorage.getItem("token"),
+        }
+    })
+        .then(responsive => responsive.json())
+        .then(posts => {
             let title = document.getElementById("title")
-            let posts = JSON.parse(this.responseText)
 
             title.textContent = "Your Posts"
 
@@ -128,28 +95,20 @@ function userPosts() {
                 ulUser.classList.add("list-principal")
 
                 ulUser.innerHTML += `<li><h3>ID: ${post.ID}</h3></li>
-                                     <li>Content: ${post.Content}</li>
-                                     <li>Date: ${post.Date}</li>`
+                                                 <li>Content: ${post.Content}</li>
+                                                 <li>Date: ${post.Date}</li>`
 
                 listPost.appendChild(ulUser)
             }
             main.appendChild(listPost)
 
+        })
+        .catch(() => document.getElementById("title").textContent = "Error: Necesita autenticarse")
 
-        } else if (this.status === 400) {
-
-            document.getElementById("title").textContent = "Error: Necesita autenticarse"
-
-        };
-    };
-
-    xhttpUserPosts.open("GET", "/api/v1/user/posts", true)
-    xhttpUserPosts.setRequestHeader("Authorization", localStorage.getItem("token"))
-    xhttpUserPosts.send();
 }
 
 function userFriends() {
-    const xhttpUserFriends = new XMLHttpRequest();
+    //    const xhttpUserFriends = new XMLHttpRequest();
 
     let nav = document.getElementById("nav")
     if (nav != null) {
@@ -159,12 +118,14 @@ function userFriends() {
     let btnIndex = document.getElementById("btn-index")
     btnIndex.addEventListener("click", backToIndex)
 
-    xhttpUserFriends.onreadystatechange = function () {
-
-        if (this.readyState === 4 && this.status === 200) {
-
+    fetch("/api/v1/user/friends", {
+        headers: {
+            "Authorization": localStorage.getItem("token"),
+        }
+    })
+        .then(responsive => responsive.json())
+        .then(friends => {
             let title = document.getElementById("title")
-            let friends = JSON.parse(this.responseText)
 
             title.textContent = "Your Friends"
 
@@ -176,23 +137,13 @@ function userFriends() {
                 const ulUser = document.createElement("ul")
                 ulUser.classList.add("list-principal")
                 ulUser.innerHTML += `<li><h2>User: ${friend.Username}</h2></li>
-                                     <li>ID: ${friend.ID}</li>
-                                     <li>Role: ${friend.Role}</li>`
+                                                 <li>ID: ${friend.ID}</li>
+                                                 <li>Role: ${friend.Role}</li>`
                 listFriends.appendChild(ulUser)
             }
             main.appendChild(listFriends)
-
-
-        } else if (this.status === 400) {
-
-            document.getElementById("title").textContent = "Error: Necesita autenticarse"
-
-        };
-    };
-
-    xhttpUserFriends.open("GET", "/api/v1/user/friends", true)
-    xhttpUserFriends.setRequestHeader("Authorization", localStorage.getItem("token"))
-    xhttpUserFriends.send();
+        })
+        .catch(() => document.getElementById("title").textContent = "Error: Necesita autenticarse")
 }
 
 function friendPosts() {
@@ -228,46 +179,37 @@ function friendPosts() {
 
         const friendUsername = document.getElementById("friendUsername").value;
 
-        const xhttpFriendPosts = new XMLHttpRequest();
+        fetch(`/api/v1/friend/${friendUsername}/posts`, {
+            headers: {
+                "Authorization": localStorage.getItem("token"),
+            }
+        })
+            .then(responsive => responsive.json())
+            .then(friendPosts => {
 
-        xhttpFriendPosts.onreadystatechange = function () {
-
-            let main = document.getElementById("main")
-
-
-            if (this.readyState === 4 && this.status === 200) {
-                let friendPosts = JSON.parse(this.responseText);
-
+                let main = document.getElementById("main")
                 let title = document.getElementById("title")
                 title.textContent = `${friendUsername}'s Posts`
                 for (friendPost of friendPosts.Posts) {
                     const ulFriendPosts = document.createElement("ul")
                     ulFriendPosts.classList.add("list-principal")
                     ulFriendPosts.innerHTML += `<li><h3>ID: ${friendPost.ID}</h3></li>
-                                    <li>Content: ${friendPost.Content}</li>
-                                    <li>Date: ${friendPost.Date}</li>`
+                                                    <li>Content: ${friendPost.Content}</li>
+                                                    <li>Date: ${friendPost.Date}</li>`
                     main.appendChild(ulFriendPosts)
 
                 }
+            })
 
-
-            } else {
+            .catch(() => {
                 form.remove()
-                title.textContent = "Error: The Username Entered Does Not Belong To One Of Your Friends"
-            }
-
-        };
-        xhttpFriendPosts.open("GET", `/api/v1/friend/${friendUsername}/posts`, true);
-        xhttpFriendPosts.setRequestHeader("Authorization", localStorage.getItem("token"))
-        xhttpFriendPosts.send();
+                document.getElementById("title").textContent = "Error: Necesita autenticarse"
+            })
     })
-
-
 }
 
-function friendsPosts() {
 
-    const xhttpFriendsPosts = new XMLHttpRequest();
+function friendsPosts() {
 
     let nav = document.getElementById("nav")
     if (nav != null) {
@@ -280,36 +222,31 @@ function friendsPosts() {
     let title = document.getElementById("title")
     title.textContent = "Your Friends' Posts"
 
-    xhttpFriendsPosts.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-            let friendsPosts = JSON.parse(this.responseText)
-
+    fetch("/api/v1/friends/posts", {
+        headers: {
+            "Authorization": localStorage.getItem("token"),
+        }
+    })
+        .then(responsive => responsive.json())
+        .then(friendsPosts => {
             let main = document.getElementById("main")
-
 
             for (friendPost of friendsPosts) {
                 const ulfriendPost = document.createElement("ul")
                 ulfriendPost.classList.add("list-principal")
                 ulfriendPost.innerHTML += `<li><h2>Author: ${friendPost.Author}</h2></li>
-                                    <li class="list-principal__post-label"><h3>Posts: </h3></li>
-                                    <ul class="list-principal__list-aux">
-                                        <li><h3>ID: ${friendPost.Post.ID}</h3></li>
-                                        <li>Content: ${friendPost.Post.Content}</li>
-                                        <li>Date: ${friendPost.Post.Date}</li>
-                                    </ul>`
+                                                <li class="list-principal__post-label"><h3>Posts: </h3></li>
+                                                <ul class="list-principal__list-aux">
+                                                    <li><h3>ID: ${friendPost.Post.ID}</h3></li>
+                                                    <li>Content: ${friendPost.Post.Content}</li>
+                                                    <li>Date: ${friendPost.Post.Date}</li>
+                                                </ul>`
                 main.appendChild(ulfriendPost)
 
             }
 
-        } else if (this.status === 400) {
-
-            document.getElementById("title").textContent = "Error: Necesita autenticarse"
-
-        };
-    }
-    xhttpFriendsPosts.open("GET", "/api/v1/friends/posts", true);
-    xhttpFriendsPosts.setRequestHeader("Authorization", localStorage.getItem("token"))
-    xhttpFriendsPosts.send();
+        })
+        .catch(() => document.getElementById("title").textContent = "Error: Necesita autenticarse")
 
 }
 
@@ -350,6 +287,23 @@ function login() {
             Password: password.value
         };
 
+        //        fetch("/api/v1/signin", {
+        //            method: "POST",
+        //            body: JSON.stringify(User),
+        //        })
+        //            .then(responsive => responsive.json())
+        //            .then(token => {
+        //                console.log(token)
+        //                userUsername = username.value;
+        //                localStorage.setItem("token", token.Content);
+        //                backToIndex();
+        //
+        //            })
+        //            .catch(() => {
+        //                form.remove()
+        //                document.getElementById("title").textContent = "Error: Username and/or Password Invalid"
+        //            })
+
         const xhttpLogin = new XMLHttpRequest();
 
         xhttpLogin.onreadystatechange = function () {
@@ -370,25 +324,42 @@ function login() {
         xhttpLogin.send(JSON.stringify(User));
     })
 
+
 }
 
 function logout() {
-    const xhttpLogout = new XMLHttpRequest();
-    xhttpLogout.onreadystatechange = function () {
 
-        if (this.readyState === 4 && this.status === 200) {
+    fetch("/api/v1/logout", {
+        method: "GET",
+        headers: {
+            "Authorization": localStorage.getItem("token"),
+        }
+    })
+        .then(responsive => responsive.json())
+        .then(() => {
             userUsername = ""
             localStorage.removeItem("token")
             backToIndex();
-        } else {
+        })
+        .catch(() => {
             backToIndex();
-        }
+        })
 
-    }
-
-    xhttpLogout.open("GET", "/api/v1/logout", true);
-    xhttpLogout.setRequestHeader("Authorization", localStorage.getItem("token"))
-    xhttpLogout.send();
+    //    const xhttpLogout = new XMLHttpRequest();
+    //    xhttpLogout.onreadystatechange = function () {
+    //
+    //        if (this.readyState === 4 && this.status === 200) {
+    //            userUsername = ""
+    //            localStorage.removeItem("token")
+    //            backToIndex();
+    //        } else {
+    //            backToIndex();
+    //        }
+    //
+    //    }
+    //xhttpLogout.open("GET", "/api/v1/logout", true);
+    //xhttpLogout.setRequestHeader("Authorization", localStorage.getItem("token"))
+    //xhttpLogout.send();
 }
 
 function backToIndex() {

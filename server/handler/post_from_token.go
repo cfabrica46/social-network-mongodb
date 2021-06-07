@@ -21,6 +21,9 @@ func GetPostsFromUser(c *gin.Context) {
 
 	posts, err := database.GetPostsFromUser(user.ID)
 	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"ErrMessage": "Internal Error",
+		})
 		return
 	}
 

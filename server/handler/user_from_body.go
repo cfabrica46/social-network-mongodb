@@ -20,7 +20,7 @@ func SignIn(c *gin.Context) {
 
 	err := database.GetUser(user)
 	if err != nil {
-		c.JSON(http.StatusForbidden, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"ErrMessage": "Usuario no encontrado",
 		})
 		return
@@ -28,7 +28,7 @@ func SignIn(c *gin.Context) {
 
 	user.Token, err = token.GenerateToken(user.ID.Hex(), user.Username, user.Role)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"ErrMessage": "Internal Error",
 		})
 		return

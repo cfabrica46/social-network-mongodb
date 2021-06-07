@@ -1,5 +1,5 @@
 .form {
-    width: 300px;
+    width: 250px;
     padding: 20px;
     position: absolute;
     top: 50%;
@@ -9,7 +9,7 @@
     text-align: center;
     border-radius: 22px;
     color: white;
-    font-size: 2em;
+    font-size: 1.5em;
 
     .form__input-text {
         font-size: 0.5em;
@@ -38,5 +38,10 @@
         color: white;
         border-radius: 22px;
         cursor: pointer;
+    }
+
+    @media only screen and (min-width: $small) {
+        font-size: 2em;
+        width: 300px;
     }
 }
