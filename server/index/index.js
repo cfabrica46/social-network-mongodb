@@ -82,6 +82,7 @@ function userPosts() {
     })
         .then(responsive => responsive.json())
         .then(posts => {
+            console.log(posts)
             let title = document.getElementById("title")
 
             title.textContent = "Your Posts"
@@ -103,7 +104,9 @@ function userPosts() {
             main.appendChild(listPost)
 
         })
-        .catch(() => document.getElementById("title").textContent = "Error: Necesita autenticarse")
+        .catch(() => {
+            document.getElementById("title").textContent = "Error: Necesita autenticarse"
+        })
 
 }
 
@@ -287,41 +290,47 @@ function login() {
             Password: password.value
         };
 
-        //        fetch("/api/v1/signin", {
-        //            method: "POST",
-        //            body: JSON.stringify(User),
-        //        })
-        //            .then(responsive => responsive.json())
-        //            .then(token => {
-        //                console.log(token)
-        //                userUsername = username.value;
-        //                localStorage.setItem("token", token.Content);
-        //                backToIndex();
-        //
-        //            })
-        //            .catch(() => {
-        //                form.remove()
-        //                document.getElementById("title").textContent = "Error: Username and/or Password Invalid"
-        //            })
+        fetch("/api/v1/signin", {
+            method: "POST",
+            body: JSON.stringify(User),
+        })
+            .then(responsive => {
+                if (responsive.status >= 400) {
+                    throw "holi"
+                }
+                return responsive.json()
 
-        const xhttpLogin = new XMLHttpRequest();
-
-        xhttpLogin.onreadystatechange = function () {
-
-            if (this.readyState === 4 && this.status === 200) {
-                let token = JSON.parse(this.responseText);
+            })
+            .then(token => {
+                console.log(token)
                 userUsername = username.value;
                 localStorage.setItem("token", token.Content);
                 backToIndex();
-            } else {
+
+            })
+            .catch(() => {
                 form.remove()
-                title.textContent = "Error: Username and/or Password Invalid"
-            }
+                document.getElementById("title").textContent = "Error: Username and/or Password Invalid"
+            })
 
-        };
-
-        xhttpLogin.open("POST", "/api/v1/signin", true);
-        xhttpLogin.send(JSON.stringify(User));
+        //    const xhttpLogin = new XMLHttpRequest();
+        //
+        //    xhttpLogin.onreadystatechange = function () {
+        //
+        //        if (this.readyState === 4 && this.status === 200) {
+        //            let token = JSON.parse(this.responseText);
+        //            userUsername = username.value;
+        //            localStorage.setItem("token", token.Content);
+        //            backToIndex();
+        //        } else {
+        //            form.remove()
+        //            title.textContent = "Error: Username and/or Password Invalid"
+        //        }
+        //
+        //    };
+        //
+        //    xhttpLogin.open("POST", "/api/v1/signin", true);
+        //    xhttpLogin.send(JSON.stringify(User));
     })
 
 
@@ -345,21 +354,6 @@ function logout() {
             backToIndex();
         })
 
-    //    const xhttpLogout = new XMLHttpRequest();
-    //    xhttpLogout.onreadystatechange = function () {
-    //
-    //        if (this.readyState === 4 && this.status === 200) {
-    //            userUsername = ""
-    //            localStorage.removeItem("token")
-    //            backToIndex();
-    //        } else {
-    //            backToIndex();
-    //        }
-    //
-    //    }
-    //xhttpLogout.open("GET", "/api/v1/logout", true);
-    //xhttpLogout.setRequestHeader("Authorization", localStorage.getItem("token"))
-    //xhttpLogout.send();
 }
 
 function backToIndex() {
