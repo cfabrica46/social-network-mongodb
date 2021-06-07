@@ -35,8 +35,13 @@ function users() {
     title.textContent = "All Users"
 
     fetch("/api/v1/users")
-        .then(responsive => responsive.json())
-        .then(users => {
+        .then(responsive => {
+            if (responsive.status >= 400) {
+                throw true
+            }
+            return responsive.json()
+
+        }).then(users => {
 
             let main = document.getElementById("main")
 
@@ -80,9 +85,13 @@ function userPosts() {
             "Authorization": localStorage.getItem("token"),
         }
     })
-        .then(responsive => responsive.json())
-        .then(posts => {
-            console.log(posts)
+        .then(responsive => {
+            if (responsive.status >= 400) {
+                throw true
+            }
+            return responsive.json()
+
+        }).then(posts => {
             let title = document.getElementById("title")
 
             title.textContent = "Your Posts"
@@ -111,7 +120,6 @@ function userPosts() {
 }
 
 function userFriends() {
-    //    const xhttpUserFriends = new XMLHttpRequest();
 
     let nav = document.getElementById("nav")
     if (nav != null) {
@@ -126,8 +134,13 @@ function userFriends() {
             "Authorization": localStorage.getItem("token"),
         }
     })
-        .then(responsive => responsive.json())
-        .then(friends => {
+        .then(responsive => {
+            if (responsive.status >= 400) {
+                throw true
+            }
+            return responsive.json()
+
+        }).then(friends => {
             let title = document.getElementById("title")
 
             title.textContent = "Your Friends"
@@ -187,7 +200,13 @@ function friendPosts() {
                 "Authorization": localStorage.getItem("token"),
             }
         })
-            .then(responsive => responsive.json())
+            .then(responsive => {
+                if (responsive.status >= 400) {
+                    throw true
+                }
+                return responsive.json()
+
+            })
             .then(friendPosts => {
 
                 let main = document.getElementById("main")
@@ -211,7 +230,6 @@ function friendPosts() {
     })
 }
 
-
 function friendsPosts() {
 
     let nav = document.getElementById("nav")
@@ -230,7 +248,13 @@ function friendsPosts() {
             "Authorization": localStorage.getItem("token"),
         }
     })
-        .then(responsive => responsive.json())
+        .then(responsive => {
+            if (responsive.status >= 400) {
+                throw true
+            }
+            return responsive.json()
+
+        })
         .then(friendsPosts => {
             let main = document.getElementById("main")
 
@@ -296,7 +320,7 @@ function login() {
         })
             .then(responsive => {
                 if (responsive.status >= 400) {
-                    throw "holi"
+                    throw true
                 }
                 return responsive.json()
 
@@ -312,25 +336,6 @@ function login() {
                 form.remove()
                 document.getElementById("title").textContent = "Error: Username and/or Password Invalid"
             })
-
-        //    const xhttpLogin = new XMLHttpRequest();
-        //
-        //    xhttpLogin.onreadystatechange = function () {
-        //
-        //        if (this.readyState === 4 && this.status === 200) {
-        //            let token = JSON.parse(this.responseText);
-        //            userUsername = username.value;
-        //            localStorage.setItem("token", token.Content);
-        //            backToIndex();
-        //        } else {
-        //            form.remove()
-        //            title.textContent = "Error: Username and/or Password Invalid"
-        //        }
-        //
-        //    };
-        //
-        //    xhttpLogin.open("POST", "/api/v1/signin", true);
-        //    xhttpLogin.send(JSON.stringify(User));
     })
 
 
