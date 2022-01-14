@@ -31,10 +31,10 @@ func init() {
 	PostsCollection = DB.Collection("posts")
 	BlackListCollection = DB.Collection("black_list")
 
-	err = migrate()
+	/* err = migrate()
 	if err != nil {
 		log.Fatal(err)
-	}
+	} */
 }
 
 func open() (client *mongo.Client, err error) {
@@ -56,7 +56,7 @@ func migrate() (err error) {
 
 	var users []interface{}
 
-	ids := []primitive.ObjectID{getIDForMigration("60b1c4924ab293de961da0e7"), getIDForMigration("60b1c4924ab293de961da0e8"), getIDForMigration("60b1c4924ab293de961da0e9"), getIDForMigration("60b1c4924ab293de961da0ea")}
+	ids := []primitive.ObjectID{getIDForMigration("10b1c4924ab293de961da0e7"), getIDForMigration("10b1c4924ab293de961da0e8"), getIDForMigration("10b1c4924ab293de961da0e9"), getIDForMigration("60b1c4924ab293de961da0ea")}
 
 	if len(ids) == 4 {
 		cfabrica46 := User{
